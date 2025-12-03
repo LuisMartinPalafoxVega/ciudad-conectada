@@ -7,11 +7,18 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # MySQL Connection
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "mysql+pymysql://root:root@localhost:3306/ciudad_conectada"
-)
+#DATABASE_URL = os.getenv(
+ #   "DATABASE_URL",
+  #  "mysql+pymysql://root:root@localhost:3306/ciudad_conectada"
+#)
+MYSQL_USER = "root"
+MYSQL_PASSWORD= "BwEVcwXZPUGHtwtyZpCcZWOreNobiEKg"
+MYSQL_HOST= "mysql.railway.internal"
+MYSQL_PORT = "3306"
+MYSQL_DB = "railway"
 
+
+DATABASE_URL = f"mysql+pymsql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DB}"
 engine = create_engine(
     DATABASE_URL,
     pool_pre_ping=True,
