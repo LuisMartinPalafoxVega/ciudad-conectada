@@ -164,8 +164,8 @@ export class FeedComponent implements OnInit {
     const nombre = categoriaNombre.toLowerCase();
 
     if (nombre.includes('agua') || nombre.includes('fuga')) return 'assets/fugas.jpg';
-    if (nombre.includes('luz') || nombre.includes('poste')) return 'assets/luminaria.jpg';
-    if (nombre.includes('bache') || nombre.includes('pavimento')) return 'assets/bache.jpg';
+    if (nombre.includes('luminaria') || nombre.includes('poste')) return 'assets/luminaria.jpg';
+    if (nombre.includes('baches') || nombre.includes('pavimento')) return 'assets/bache.jpg';
     if (nombre.includes('basura') || nombre.includes('limpieza')) return 'assets/basura.jpg';
 
     return 'assets/placeholder.jpg';

@@ -74,9 +74,12 @@
     <div class="reporte-card" *ngFor="let reporte of reportes">
       <a [routerLink]="['/detalle-reporte', reporte.id]" class="card-image">
   <img 
-    [src]="getImagenUrl(reporte.imagen_url)"
-    [alt]="reporte.titulo"
-  />
+  [src]="reporte.imagen_url 
+           ? getImagenUrl(reporte.imagen_url) 
+           : getCategoriaImagen(reporte.categoria?.nombre || '')"
+  [alt]="reporte.titulo"
+/>
+
   <div class="badge-estado" [ngClass]="getEstadoBadgeClass(reporte.estado)">
     {{ getEstadoTexto(reporte.estado) }}
   </div>
