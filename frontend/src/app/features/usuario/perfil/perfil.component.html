@@ -1,0 +1,216 @@
+<div class="perfil-container">
+  <!-- Loading -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Cargando perfil...</p>
+  </div>
+
+  <!-- Contenido del perfil -->
+  <div class="perfil-content" *ngIf="!loading">
+    
+    <!-- Alertas -->
+    <div class="alert alert-success" *ngIf="successMessage">
+      <span class="alert-icon">✓</span>
+      <span>{{ successMessage }}</span>
+      <button class="alert-close" (click)="successMessage = null">×</button>
+    </div>
+
+    <div class="alert alert-error" *ngIf="errorMessage">
+      <span class="alert-icon">⚠</span>
+      <span>{{ errorMessage }}</span>
+      <button class="alert-close" (click)="errorMessage = null">×</button>
+    </div>
+
+    <!-- Tarjeta de usuario -->
+    <div class="user-card">
+      <div class="avatar-container">
+        <div class="user-avatar-large" *ngIf="!usuario.foto_url">
+          {{ usuario.nombre.charAt(0).toUpperCase() }}
+        </div>
+        <img 
+          *ngIf="usuario.foto_url" 
+          [src]="usuario.foto_url" 
+          class="user-avatar-large user-avatar-image"
+          [alt]="usuario.nombre"
+        />
+
+        <!-- Botón de cambiar foto -->
+        <label class="btn-change-photo" title="Cambiar foto de perfil">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 9a3 3 0 100 6 3 3 0 000-6z"/>
+            <path fill-rule="evenodd" d="M9 2a2 2 0 00-2 2v.5a2 2 0 01-1 1.732l-.537.31a2 2 0 00-.732 2.732l.5.866a2 2 0 01-.732 2.732l-.5.866a2 2 0 00.732 2.732l.537.31A2 2 0 017 18.5v.5a2 2 0 002 2h6a2 2 0 002-2v-.5a2 2 0 011-1.732l.537-.31a2 2 0 00.732-2.732l-.5-.866a2 2 0 01.732-2.732l.5-.866a2 2 0 00-.732-2.732l-.537-.31A2 2 0 0117 4.5V4a2 2 0 00-2-2H9zM6.5 12a5.5 5.5 0 1111 0 5.5 5.5 0 01-11 0z" clip-rule="evenodd"/>
+          </svg>
+          <span class="btn-text">✏️</span>
+          <input 
+            type="file" 
+            accept="image/*" 
+            (change)="onFileSelected($event)"
+            style="display: none;"
+          />
+        </label>
+
+        <!-- Overlay de subida -->
+        <div class="upload-overlay" *ngIf="uploadingPhoto">
+          <div class="spinner-upload"></div>
+          <p class="upload-text">Subiendo...</p>
+        </div>
+      </div>
+
+      <div class="user-main-info">
+        <h1>{{ usuario.nombre }}</h1>
+        <p class="user-email">{{ usuario.email }}</p>
+        <span class="user-badge" [class.admin]="usuario.rol === 'administrador'">
+          {{ usuario.rol === 'administrador' ? '👑 Administrador' : '👤 Usuario' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="perfil-tabs">
+      <button 
+        class="tab-button"
+        [class.active]="activeTab === 'info'"
+        (click)="activeTab = 'info'"
+      >
+        <span class="tab-icon">👤</span>
+        <span>Información Personal</span>
+      </button>
+      <button 
+        class="tab-button"
+        [class.active]="activeTab === 'password'"
+        (click)="activeTab = 'password'"
+      >
+        <span class="tab-icon">🔒</span>
+        <span>Cambiar Contraseña</span>
+      </button>
+    </div>
+
+    <!-- Tab: Información Personal -->
+    <div class="form-section" *ngIf="activeTab === 'info'">
+      <h2>Información Personal</h2>
+      <p class="help-text">Actualiza tu información de perfil</p>
+
+      <form [formGroup]="infoForm" (ngSubmit)="actualizarInfo()">
+        <div class="form-group">
+          <label for="nombre">Nombre completo</label>
+          <input
+            id="nombre"
+            type="text"
+            formControlName="nombre"
+            placeholder="Tu nombre"
+            [class.invalid]="nombre?.invalid && nombre?.touched"
+          />
+          <div class="error-message" *ngIf="nombre?.invalid && nombre?.touched">
+            <span *ngIf="nombre?.errors?.['required']">El nombre es requerido</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Correo electrónico</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="tu@email.com"
+            class="input-disabled"
+            readonly
+          />
+          <p class="help-text" style="margin-top: 8px;">El correo no puede ser modificado</p>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="cancelarEdicion()">
+            Cancelar
+          </button>
+          <button 
+            type="submit" 
+            class="btn-submit"
+            [disabled]="infoForm.invalid || actualizandoInfo"
+          >
+            <span class="spinner-small" *ngIf="actualizandoInfo"></span>
+            <span>{{ actualizandoInfo ? 'Guardando...' : 'Guardar Cambios' }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Tab: Cambiar Contraseña -->
+    <div class="form-section" *ngIf="activeTab === 'password'">
+      <h2>Cambiar Contraseña</h2>
+      <p class="help-text">Asegúrate de usar una contraseña segura</p>
+
+      <form [formGroup]="passwordForm" (ngSubmit)="cambiarPassword()">
+        <div class="form-group">
+          <label for="passwordActual">Contraseña actual</label>
+          <input
+            id="passwordActual"
+            type="password"
+            formControlName="passwordActual"
+            placeholder="Tu contraseña actual"
+            [class.invalid]="passwordActual?.invalid && passwordActual?.touched"
+          />
+          <div class="error-message" *ngIf="passwordActual?.invalid && passwordActual?.touched">
+            <span *ngIf="passwordActual?.errors?.['required']">La contraseña actual es requerida</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="nuevaPassword">Nueva contraseña</label>
+          <input
+            id="nuevaPassword"
+            type="password"
+            formControlName="nuevaPassword"
+            placeholder="Tu nueva contraseña"
+            [class.invalid]="nuevaPassword?.invalid && nuevaPassword?.touched"
+          />
+          <div class="error-message" *ngIf="nuevaPassword?.invalid && nuevaPassword?.touched">
+            <span *ngIf="nuevaPassword?.errors?.['required']">La nueva contraseña es requerida</span>
+            <span *ngIf="nuevaPassword?.errors?.['minlength']">Mínimo 8 caracteres</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmarPassword">Confirmar nueva contraseña</label>
+          <input
+            id="confirmarPassword"
+            type="password"
+            formControlName="confirmarPassword"
+            placeholder="Confirma tu nueva contraseña"
+            [class.invalid]="confirmarPassword?.invalid && confirmarPassword?.touched"
+          />
+          <div class="error-message" *ngIf="confirmarPassword?.invalid && confirmarPassword?.touched">
+            <span *ngIf="confirmarPassword?.errors?.['required']">Debes confirmar la contraseña</span>
+          </div>
+          <div class="error-message" *ngIf="passwordForm.errors?.['passwordMismatch'] && confirmarPassword?.touched">
+            Las contraseñas no coinciden
+          </div>
+        </div>
+
+        <div class="password-requirements">
+          <p><strong>Requisitos de la contraseña:</strong></p>
+          <ul>
+            <li>Mínimo 8 caracteres</li>
+            <li>Al menos una letra mayúscula</li>
+            <li>Al menos un número</li>
+            <li>Al menos un carácter especial (@$!%*?&)</li>
+          </ul>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="cancelarPassword()">
+            Cancelar
+          </button>
+          <button 
+            type="submit" 
+            class="btn-submit"
+            [disabled]="passwordForm.invalid || cambiandoPassword"
+          >
+            <span class="spinner-small" *ngIf="cambiandoPassword"></span>
+            <span>{{ cambiandoPassword ? 'Cambiando...' : 'Cambiar Contraseña' }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>

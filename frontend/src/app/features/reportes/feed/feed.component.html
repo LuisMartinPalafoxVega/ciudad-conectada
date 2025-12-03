@@ -1,0 +1,145 @@
+<div class="feed-container">
+  <header class="feed-header">
+    <div class="header-content">
+      <h1>Reportes de la Comunidad</h1>
+      <p>Descubre y apoya los reportes de tu vecindario</p>
+    </div>
+    
+    <button class="btn-new-report" routerLink="/nuevo-reporte" *ngIf="isAuthenticated">
+    ➕ Nuevo Reporte
+    </button>
+
+  </header>
+  
+  <!-- Filtros -->
+  <div class="filters-section">
+    <div class="filter-header">
+      <h3>🔍 Buscar y Filtrar</h3>
+    </div>
+    
+    <div class="filters-content">
+      <!-- Búsqueda -->
+      <div class="search-box">
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (keyup.enter)="onSearch()"
+          placeholder="Buscar por título, descripción, ubicación..."
+        />
+        <button (click)="onSearch()">Buscar</button>
+      </div>
+      
+      <!-- Filtros -->
+      <div class="filters-row">
+        <div class="filter-group">
+          <label>Categoría</label>
+          <select [(ngModel)]="categoriaSeleccionada" (change)="onCategoriaChange(categoriaSeleccionada)">
+            <option [value]="null">Todas</option>
+            <option *ngFor="let cat of categorias" [value]="cat.id">
+              {{ cat.icono }} {{ cat.nombre }}
+            </option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label>Estado</label>
+          <select [(ngModel)]="estadoSeleccionado" (change)="onEstadoChange(estadoSeleccionado)">
+            <option [value]="null">Todos</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="en_proceso">En Proceso</option>
+            <option value="resuelto">Resuelto</option>
+          </select>
+        </div>
+        
+        <button class="btn-clear-filters" (click)="clearFilters()">
+          Limpiar filtros
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Loading -->
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Cargando reportes...</p>
+  </div>
+  
+  <!-- Error -->
+  <div class="error" *ngIf="error && !loading">
+    {{ error }}
+  </div>
+  
+  <!-- Grid de reportes -->
+  <div class="reportes-grid" *ngIf="!loading && reportes.length > 0">
+    <div class="reporte-card" *ngFor="let reporte of reportes">
+      <a [routerLink]="['/detalle-reporte', reporte.id]" class="card-image">
+  <img 
+    [src]="getImagenUrl(reporte.imagen_url)"
+    [alt]="reporte.titulo"
+  />
+  <div class="badge-estado" [ngClass]="getEstadoBadgeClass(reporte.estado)">
+    {{ getEstadoTexto(reporte.estado) }}
+  </div>
+</a>
+
+      
+      <!-- Contenido -->
+      <div class="card-content">
+        <div class="card-category" [style.background-color]="reporte.categoria.color">
+          {{ reporte.categoria.icono }} {{ limpiarNombre(reporte.categoria.nombre) }}
+        </div>
+        
+        <h3 [routerLink]="['/detalle-reporte', reporte.id]">{{ reporte.titulo }}</h3>
+        <p class="description">{{ reporte.descripcion }}</p>
+        
+        <div class="card-meta">
+          <div class="meta-item">
+            <span class="icon">👤</span>
+            <span>{{ reporte.usuario.nombre }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="icon">📍</span>
+            <span>{{ reporte.direccion_referencia || 'Ubicación' }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="icon">📅</span>
+            <span>{{ reporte.fecha_creacion | date: 'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+        
+        <div class="card-footer">
+          <button 
+            class="btn-like" 
+            [class.active]="reporte.usuario_dio_like"
+            (click)="toggleLike(reporte)"
+          >
+            <span class="icon">{{ reporte.usuario_dio_like ? '❤️' : '🤍' }}</span>
+            <span>{{ reporte.total_likes }}</span>
+          </button>
+          
+          <a [routerLink]="['/detalle-reporte', reporte.id]" class="btn-details">
+            Ver detalles
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Sin resultados -->
+  <div class="no-results" *ngIf="!loading && reportes.length === 0">
+    <div class="empty-icon">📭</div>
+    <h3>No se encontraron reportes</h3>
+    <p>Intenta ajustar los filtros o crea el primer reporte</p>
+  </div>
+  
+  <!-- Paginación -->
+  <div class="pagination" *ngIf="!loading && reportes.length > 0">
+    <button (click)="prevPage()" [disabled]="!hasPrev">
+      ← Anterior
+    </button>
+    <span>Página {{ currentPage }} de {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="!hasNext">
+      Siguiente →
+    </button>
+  </div>
+</div>

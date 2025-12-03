@@ -1,0 +1,169 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Panel de Administración</h1>
+    <p>Gestiona y da seguimiento a los reportes de la comunidad</p>
+  </div>
+
+  <!-- Tarjetas de estadísticas -->
+  <div class="stats-grid" *ngIf="estadisticas">
+    <div class="stat-card total" (click)="filterByEstado(null)">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ estadisticas.total_reportes || 0 }}</div>
+        <div class="stat-label">Reportes Totales</div>
+      </div>
+    </div>
+
+    <div class="stat-card pendientes" (click)="filterByEstado('pendiente')">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ estadisticas.pendientes || 0 }}</div>
+        <div class="stat-label">Pendientes</div>
+        <div class="stat-hint">Por atender</div>
+      </div>
+    </div>
+
+    <div class="stat-card proceso" (click)="filterByEstado('en_proceso')">
+      <div class="stat-icon">🔄</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ estadisticas.en_proceso || 0 }}</div>
+        <div class="stat-label">En Proceso</div>
+        <div class="stat-hint">En atención</div>
+      </div>
+    </div>
+
+    <div class="stat-card resueltos" (click)="filterByEstado('resuelto')">
+      <div class="stat-icon">✅</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ estadisticas.resueltos || 0 }}</div>
+        <div class="stat-label">Resueltos</div>
+        <div class="stat-hint">{{ estadisticas.porcentaje_resueltos || 0 }}% del total</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reportes por categoría -->
+  <div class="section-card" *ngIf="estadisticas && estadisticas.reportes_por_categoria && estadisticas.reportes_por_categoria.length > 0">
+    <h2>Reportes por Categoría</h2>
+    <div class="categories-list">
+      <div class="category-item" *ngFor="let cat of estadisticas.reportes_por_categoria">
+        <div class="category-name">{{ cat.nombre }}</div>
+        <div class="category-bar">
+          <div class="category-fill" 
+               [style.width.%]="estadisticas && estadisticas.total_reportes > 0 ? (cat.total / estadisticas.total_reportes) * 100 : 0">
+          </div>
+        </div>
+        <div class="category-count">{{ cat.total }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters-bar">
+    <h2>Gestión de Reportes</h2>
+    <div class="filter-buttons">
+      <button 
+        [class.active]="estadoSeleccionado === null"
+        (click)="filterByEstado(null)">
+        Todos
+      </button>
+      <button 
+        [class.active]="estadoSeleccionado === 'pendiente'"
+        (click)="filterByEstado('pendiente')">
+        Pendientes
+      </button>
+      <button 
+        [class.active]="estadoSeleccionado === 'en_proceso'"
+        (click)="filterByEstado('en_proceso')">
+        En Proceso
+      </button>
+      <button 
+        [class.active]="estadoSeleccionado === 'resuelto'"
+        (click)="filterByEstado('resuelto')">
+        Resueltos
+      </button>
+    </div>
+  </div>
+
+  <div class="orden-bar">
+  <label for="orden">Ordenar por:</label>
+  <select id="orden" [(ngModel)]="ordenSeleccionado" (change)="loadReportes()">
+    <option value="">Sin orden</option>
+    <option value="fecha">Fecha más reciente</option>
+    <option value="likes">Más likes</option>
+  </select>
+</div>
+
+
+  <!-- Lista de reportes -->
+  <div class="reportes-table">
+    <div class="loading" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Cargando reportes...</p>
+    </div>
+
+    <div class="table-container" *ngIf="!loading && reportes && reportes.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Usuario</th>
+            <th>Fecha</th>
+            <th>Likes</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reporte of reportes">
+            <td>#{{ reporte.id }}</td>
+            <td class="titulo-cell">{{ reporte.titulo }}</td>
+            <td>
+              <span class="category-badge" 
+                    [style.background-color]="reporte.categoria?.color || '#666'">
+                {{ reporte.categoria?.nombre || 'Sin categoría' }}
+              </span>
+            </td>
+            <td>{{ reporte.usuario?.nombre || 'Desconocido' }}</td>
+            <td>{{ reporte.fecha_creacion | date: 'dd/MM/yyyy' }}</td>
+            <td class="likes-cell">❤️ {{ reporte.total_likes || 0 }}</td>
+            <td>
+              <span class="badge" [ngClass]="getEstadoBadgeClass(reporte.estado)">
+                {{ getEstadoTexto(reporte.estado) }}
+              </span>
+            </td>
+            <td class="actions-cell">
+  <select 
+    [value]="reporte.estado"
+    (change)="cambiarEstado(reporte, $any($event.target).value)"
+    class="estado-select">
+    <option value="pendiente">Pendiente</option>
+    <option value="en_proceso">En Proceso</option>
+    <option value="resuelto">Resuelto</option>
+  </select>
+
+  <button class="delete-btn" (click)="confirmarEliminacion(reporte)">
+    🗑️
+  </button>
+</td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="no-results" *ngIf="!loading && (!reportes || reportes.length === 0)">
+      <div class="empty-icon">🔭</div>
+      <h3>No hay reportes</h3>
+      <p>No se encontraron reportes con los filtros seleccionados</p>
+    </div>
+
+    <div class="no-results" *ngIf="error && !loading">
+      <div class="empty-icon">⚠️</div>
+      <h3>Error al cargar</h3>
+      <p>{{ error }}</p>
+    </div>
+  </div>
+</div>

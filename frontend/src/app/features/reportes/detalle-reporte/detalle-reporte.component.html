@@ -1,0 +1,411 @@
+<div class="detalle-container">
+  <a routerLink="/feed" class="btn-back">
+    ← Volver al feed
+  </a>
+
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Cargando reporte...</p>
+  </div>
+
+  <div class="alert-error" *ngIf="error && !loading">
+    {{ error }}
+  </div>
+
+  <div class="detalle-content" *ngIf="reporte && !loading">
+    <div class="main-column">
+      <div class="image-section">
+        <img 
+          [src]="getImagenUrl(reporte.imagen_url)" 
+          [alt]="reporte.titulo"
+          class="reporte-image"
+        />
+      </div>
+
+      <div class="info-section">
+        <div class="reporte-header">
+          <div class="reporte-title-area">
+            <!-- Modo edición del título -->
+            <div *ngIf="editandoTitulo; else verTitulo">
+              <input 
+                type="text" 
+                [(ngModel)]="tituloEditado"
+                class="edit-input"
+                (keyup.enter)="guardarTitulo()"
+                (keyup.escape)="cancelarEdicion()"
+              />
+              <div class="edit-actions">
+                <button class="btn-save" (click)="guardarTitulo()">✓ Guardar</button>
+                <button class="btn-cancel-edit" (click)="cancelarEdicion()">✕ Cancelar</button>
+              </div>
+            </div>
+            <ng-template #verTitulo>
+              <h1>
+                {{ reporte.titulo }}
+                <button 
+                  *ngIf="puedeEditarReporte()"
+                  class="btn-edit-inline"
+                  (click)="activarEdicionTitulo()"
+                  title="Editar título"
+                >
+                  ✏️
+                </button>
+              </h1>
+            </ng-template>
+
+            <div class="badges">
+              <span class="badge" [ngClass]="getBadgeClass(reporte.estado)">
+                {{ getEstadoTexto(reporte.estado) }}
+              </span>
+              <span class="badge badge-category" [style.background-color]="reporte.categoria.color">
+                {{ reporte.categoria.icono }} {{ reporte.categoria.nombre }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reporte-meta">
+          <div class="meta-item">
+            <span>👤</span>
+            <span>{{ reporte.usuario.nombre }}</span>
+          </div>
+          <div class="meta-item">
+            <span>📅</span>
+            <span>{{ reporte.fecha_creacion | date: 'dd/MM/yyyy - HH:mm' }}</span>
+          </div>
+        </div>
+
+        <!-- Modo edición de descripción -->
+        <div *ngIf="editandoDescripcion; else verDescripcion" class="edit-container">
+          <textarea 
+            [(ngModel)]="descripcionEditada"
+            class="edit-textarea"
+            rows="5"
+          ></textarea>
+          <div class="edit-actions">
+            <button class="btn-save" (click)="guardarDescripcion()">✓ Guardar</button>
+            <button class="btn-cancel-edit" (click)="cancelarEdicion()">✕ Cancelar</button>
+          </div>
+        </div>
+        <ng-template #verDescripcion>
+          <p class="reporte-description">
+            {{ reporte.descripcion }}
+            <button 
+              *ngIf="puedeEditarReporte()"
+              class="btn-edit-inline"
+              (click)="activarEdicionDescripcion()"
+              title="Editar descripción"
+            >
+              ✏️
+            </button>
+          </p>
+        </ng-template>
+
+        <div class="like-section">
+          <button 
+            class="btn-like"
+            [class.liked]="reporte.usuario_dio_like"
+            (click)="toggleLike()"
+          >
+            <span>{{ reporte.usuario_dio_like ? '❤️' : '🤍' }}</span>
+            <span>{{ reporte.total_likes }} Me gusta</span>
+          </button>
+
+          <!-- Botón eliminar reporte -->
+          <button 
+            *ngIf="puedeEditarReporte()"
+            class="btn-delete-report"
+            (click)="eliminarReporte()"
+            title="Eliminar reporte"
+          >
+            🗑️ Eliminar Reporte
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-column">
+      <!-- Ubicación con mapa -->
+      <div class="sidebar-card">
+        <div class="card-header">
+          <h3>📍 Ubicación</h3>
+        </div>
+        <div class="card-body">
+          <div class="info-row">
+            <span class="info-label">Dirección:</span>
+            <p class="info-value">{{ reporte.direccion_referencia || 'No especificada' }}</p>
+          </div>
+          
+          <div class="info-row">
+            <span class="info-label">Coordenadas:</span>
+            <p class="info-value coordinates">
+              {{ reporte.latitud }}, {{ reporte.longitud }}
+            </p>
+          </div>
+
+          <!-- Mapa pequeño -->
+          <div id="detalle-map" class="mini-map"></div>
+
+          <button class="btn-map" (click)="verEnMapa()">
+            🗺️ Ver en mapa completo
+          </button>
+        </div>
+      </div>
+
+      <!-- Comentarios -->
+<div class="sidebar-card">
+  <div class="card-header">
+    <h3>💬 Comentarios ({{ getTotalComentarios() }})</h3>
+  </div>
+  <div class="card-body">
+    <!-- Formulario para nuevo comentario -->
+    <div class="comentario-form">
+      <textarea
+        [(ngModel)]="nuevoComentario"
+        placeholder="Escribe un comentario..."
+        rows="3"
+        class="comentario-input"
+      ></textarea>
+      <button 
+        class="btn-comentar"
+        (click)="agregarComentario()"
+        [disabled]="!nuevoComentario.trim() || enviandoComentario"
+      >
+        {{ enviandoComentario ? 'Enviando...' : 'Comentar' }}
+      </button>
+    </div>
+
+    <!-- Lista de comentarios con respuestas -->
+    <div class="comentarios-lista" *ngIf="comentarios.length > 0">
+      <div class="comentario-item" *ngFor="let comentario of comentarios">
+        <div class="comentario-header">
+          <div class="comentario-usuario">
+            <span class="usuario-avatar" *ngIf="!getFotoUsuario(comentario)">
+              {{ getInitials(comentario.usuario.nombre) }}
+            </span>
+            <img 
+              *ngIf="getFotoUsuario(comentario)" 
+              [src]="getFotoUsuario(comentario)" 
+              class="usuario-avatar usuario-avatar-image"
+              [alt]="comentario.usuario.nombre"
+            />
+            
+            <div>
+              <strong>{{ comentario.usuario.nombre }}</strong>
+              <span class="comentario-fecha">
+                {{ comentario.fecha_creacion | date: 'dd/MM/yyyy HH:mm' }}
+              </span>
+            </div>
+          </div>
+          
+          <!-- Botones de acción -->
+          <div class="comentario-actions" *ngIf="puedeEditarComentario(comentario)">
+            <button 
+              class="btn-edit-comentario"
+              (click)="activarEdicionComentario(comentario)"
+              title="Editar comentario"
+            >
+              ✏️ Editar
+            </button>
+            <button 
+              class="btn-delete-comentario"
+              (click)="eliminarComentario(comentario.id)"
+              title="Eliminar comentario"
+            >
+              🗑️ Eliminar
+            </button>
+          </div>
+        </div>
+
+        <!-- Mostrar contenido o formulario de edición -->
+        <div *ngIf="editandoComentario !== comentario.id; else editForm">
+          <p class="comentario-contenido">{{ comentario.contenido }}</p>
+        </div>
+        
+        <ng-template #editForm>
+          <div class="edit-comentario-form">
+            <textarea
+              [(ngModel)]="contenidoEditado"
+              class="edit-comentario-input"
+            ></textarea>
+            <div class="respuesta-actions">
+              <button 
+                class="btn-comentar-small"
+                (click)="guardarEdicionComentario(comentario.id)"
+                [disabled]="!contenidoEditado.trim()"
+              >
+                ✓ Guardar
+              </button>
+              <button 
+                class="btn-cancel-respuesta"
+                (click)="cancelarEdicionComentario()"
+              >
+                ✕ Cancelar
+              </button>
+            </div>
+          </div>
+        </ng-template>
+
+        <!-- Botón responder -->
+        <button 
+          class="btn-responder"
+          (click)="activarRespuesta(comentario.id)"
+          *ngIf="respondiendoA !== comentario.id"
+        >
+          💬 Responder
+        </button>
+
+        <!-- Formulario de respuesta -->
+        <div class="respuesta-form" *ngIf="respondiendoA === comentario.id">
+          <div class="respuesta-header-info">
+            <span class="respuesta-icon">↳</span>
+            <span class="respuesta-texto">
+              Respondiendo a <strong>{{ comentario.usuario.nombre }}</strong>
+            </span>
+          </div>
+          <textarea
+            [(ngModel)]="textoRespuesta"
+            placeholder="Escribe tu respuesta..."
+            rows="2"
+            class="comentario-input"
+            autofocus
+          ></textarea>
+          <div class="respuesta-actions">
+            <button 
+              class="btn-comentar-small"
+              (click)="enviarRespuesta(comentario.id)"
+              [disabled]="!textoRespuesta.trim()"
+            >
+              ✓ Responder
+            </button>
+            <button 
+              class="btn-cancel-respuesta"
+              (click)="cancelarRespuesta()"
+            >
+              ✕ Cancelar
+            </button>
+          </div>
+        </div>
+
+        <!-- Respuestas anidadas -->
+        <div class="respuestas-container" *ngIf="comentario.respuestas && comentario.respuestas.length > 0">
+          <div class="respuesta-item" *ngFor="let respuesta of comentario.respuestas">
+            <div class="comentario-header">
+              <div class="comentario-usuario">
+                <span class="usuario-avatar-small" *ngIf="!getFotoUsuario(respuesta)">
+                  {{ getInitials(respuesta.usuario.nombre) }}
+                </span>
+                <img 
+                  *ngIf="getFotoUsuario(respuesta)" 
+                  [src]="getFotoUsuario(respuesta)" 
+                  class="usuario-avatar-small usuario-avatar-image"
+                  [alt]="respuesta.usuario.nombre"
+                />
+                
+                <div>
+                  <strong>{{ respuesta.usuario.nombre }}</strong>
+                  <span class="comentario-fecha">
+                    {{ respuesta.fecha_creacion | date: 'dd/MM/yyyy HH:mm' }}
+                  </span>
+                </div>
+              </div>
+              
+              <!-- Botones de acción en respuestas -->
+              <div class="comentario-actions" *ngIf="puedeEditarComentario(respuesta)">
+                <button 
+                  class="btn-edit-comentario"
+                  (click)="activarEdicionComentario(respuesta)"
+                  title="Editar respuesta"
+                >
+                  ✏️ Editar
+                </button>
+                <button 
+                  class="btn-delete-comentario"
+                  (click)="eliminarComentario(respuesta.id)"
+                  title="Eliminar respuesta"
+                >
+                  🗑️ Eliminar
+                </button>
+              </div>
+            </div>
+
+            <!-- Mostrar contenido o formulario de edición -->
+            <div *ngIf="editandoComentario !== respuesta.id; else editFormResp">
+              <p class="comentario-contenido">{{ respuesta.contenido }}</p>
+            </div>
+            
+            <ng-template #editFormResp>
+              <div class="edit-comentario-form">
+                <textarea
+                  [(ngModel)]="contenidoEditado"
+                  class="edit-comentario-input"
+                ></textarea>
+                <div class="respuesta-actions">
+                  <button 
+                    class="btn-comentar-small"
+                    (click)="guardarEdicionComentario(respuesta.id)"
+                    [disabled]="!contenidoEditado.trim()"
+                  >
+                    ✓ Guardar
+                  </button>
+                  <button 
+                    class="btn-cancel-respuesta"
+                    (click)="cancelarEdicionComentario()"
+                  >
+                    ✕ Cancelar
+                  </button>
+                </div>
+              </div>
+            </ng-template>
+
+            <!-- Botón responder a una respuesta -->
+            <button 
+  class="btn-responder"
+  (click)="activarRespuesta(respuesta.id)"
+  *ngIf="respondiendoA !== respuesta.id"
+>
+  💬 Responder
+</button>
+
+            <!-- Formulario de respuesta anidada -->
+            <div class="respuesta-form" *ngIf="respondiendoA === respuesta.id">
+              <div class="respuesta-header-info">
+                <span class="respuesta-icon">↳</span>
+                <span class="respuesta-texto">
+                  Respondiendo a <strong>{{ respuesta.usuario.nombre }}</strong>
+                </span>
+              </div>
+              <textarea
+                [(ngModel)]="textoRespuesta"
+                placeholder="Escribe tu respuesta..."
+                rows="2"
+                class="comentario-input"
+                autofocus
+              ></textarea>
+              <div class="respuesta-actions">
+                <button 
+  class="btn-comentar-small"
+  (click)="enviarRespuesta(respuesta.parent_id || comentario.id)"
+  [disabled]="!textoRespuesta.trim()"
+>
+  ✓ Responder
+</button>
+                <button 
+                  class="btn-cancel-respuesta"
+                  (click)="cancelarRespuesta()"
+                >
+                  ✕ Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sin comentarios -->
+    <div class="no-comentarios" *ngIf="comentarios.length === 0">
+      <p>No hay comentarios aún. ¡Sé el primero en comentar!</p>
+    </div>
+  </div>
+</div>
