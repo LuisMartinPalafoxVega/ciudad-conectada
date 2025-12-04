@@ -24,6 +24,7 @@ export class FeedComponent implements OnInit {
   searchText = '';
   categoriaSeleccionada: number | null = null;
   estadoSeleccionado: string | null = null;
+  ordenSeleccionado: string | null = null;
 
   // Paginación
   currentPage = 1;
@@ -66,6 +67,7 @@ export class FeedComponent implements OnInit {
 
     if (this.categoriaSeleccionada) params.categoria_id = this.categoriaSeleccionada;
     if (this.estadoSeleccionado) params.estado = this.estadoSeleccionado;
+    if (this.ordenSeleccionado) params.orden = this.ordenSeleccionado;
     if (this.searchText) params.search = this.searchText;
 
     this.reporteService.getReportes(params).subscribe({
@@ -107,10 +109,17 @@ export class FeedComponent implements OnInit {
     this.loadReportes();
   }
 
+  onOrdenChange(orden: string | null): void {
+    this.ordenSeleccionado = orden;
+    this.currentPage = 1;
+    this.loadReportes();
+  }
+
   clearFilters(): void {
     this.searchText = '';
     this.categoriaSeleccionada = null;
     this.estadoSeleccionado = null;
+    this.ordenSeleccionado = null;
     this.currentPage = 1;
     this.loadReportes();
   }
@@ -195,6 +204,26 @@ export class FeedComponent implements OnInit {
       case 'en_proceso': return 'En Proceso';
       case 'resuelto': return 'Resuelto';
       default: return estado;
+    }
+  }
+
+  getUrgenciaTexto(urgencia?: string): string {
+    switch (urgencia) {
+      case 'baja': return 'Baja';
+      case 'media': return 'Media';
+      case 'alta': return 'Alta';
+      case 'critica': return '🚨 Crítica';
+      default: return 'Normal';
+    }
+  }
+
+  getUrgenciaBadgeClass(urgencia?: string): string {
+    switch (urgencia) {
+      case 'baja': return 'badge-urgencia-baja';
+      case 'media': return 'badge-urgencia-media';
+      case 'alta': return 'badge-urgencia-alta';
+      case 'critica': return 'badge-urgencia-critica';
+      default: return '';
     }
   }
 }

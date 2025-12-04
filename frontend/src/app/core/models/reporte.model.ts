@@ -17,6 +17,8 @@ export interface Reporte {
   direccion_referencia?: string;
   imagen_url?: string;
   estado: 'pendiente' | 'en_proceso' | 'resuelto';
+  urgencia?: 'baja' | 'media' | 'alta' | 'critica';
+  score_urgencia?: number;
   fecha_creacion: string;
   fecha_actualizacion: string;
   usuario: Usuario;

@@ -10,6 +10,7 @@ from models.comentarios import Comentario
 from dependencies import get_current_user
 from schemas.comentario_schema import ComentarioResponse
 from schemas.reporte_schema import ReporteResponse, ReportesPaginados
+from services.urgencia_service import calcular_score_urgencia, actualizar_urgencia_reporte
 import shutil
 import os
 
@@ -75,7 +76,9 @@ def obtener_mis_reportes(
                 usuario=reporte.usuario,
                 categoria=reporte.categoria,
                 total_likes=total_likes,
-                usuario_dio_like=usuario_dio_like
+                usuario_dio_like=usuario_dio_like,
+                urgencia=reporte.urgencia.value if reporte.urgencia else "media",
+                score_urgencia=reporte.score_urgencia or 0.0
             )
         )
 
@@ -98,6 +101,7 @@ def obtener_reportes(
         categoria_id: int | None = None,
         estado: str | None = None,
         search: str | None = None,
+        orden: str | None = None,
         db: Session = Depends(get_db),
         current_user: Usuario = Depends(get_current_user)
 ):
@@ -120,12 +124,17 @@ def obtener_reportes(
             )
         )
 
+    # Ordenamiento
+    if orden == "urgencia":
+        query = query.order_by(Reporte.score_urgencia.desc())
+    else:
+        query = query.order_by(Reporte.fecha_creacion.desc())
+
     total = query.count()
     pages = max(1, (total + per_page - 1) // per_page)
 
     reportes = (
         query
-        .order_by(Reporte.fecha_creacion.desc())
         .offset((page - 1) * per_page)
         .limit(per_page)
         .all()
@@ -231,6 +240,16 @@ def crear_reporte(
     db.add(nuevo)
     db.commit()
     db.refresh(nuevo)
+    
+    # Calcular urgencia con IA
+    try:
+        urgencia, score = calcular_score_urgencia(nuevo, db)
+        nuevo.urgencia = urgencia
+        nuevo.score_urgencia = score
+        db.commit()
+        db.refresh(nuevo)
+    except Exception as e:
+        print(f"Advertencia: No se pudo calcular urgencia: {e}")
 
     return ReporteResponse(
         id=nuevo.id,
@@ -248,7 +267,9 @@ def crear_reporte(
         usuario=nuevo.usuario,
         categoria=nuevo.categoria,
         total_likes=0,
-        usuario_dio_like=False
+        usuario_dio_like=False,
+        urgencia=nuevo.urgencia.value,
+        score_urgencia=nuevo.score_urgencia
     )
 
 
@@ -286,6 +307,17 @@ def toggle_like(
     total = db.query(LikeReporte).filter(LikeReporte.reporte_id == id).count()
 
     print(f"   📊 Total likes: {total}, usuario_dio_like: {dio_like}\n")
+    
+    # Recalcular urgencia después de cambio de likes
+    try:
+        reporte = db.query(Reporte).filter(Reporte.id == id).first()
+        if reporte:
+            urgencia, score = calcular_score_urgencia(reporte, db)
+            reporte.urgencia = urgencia
+            reporte.score_urgencia = score
+            db.commit()
+    except Exception as e:
+        print(f"Advertencia: No se pudo recalcular urgencia: {e}")
 
     return {
         "usuario_dio_like": dio_like,
@@ -339,8 +371,30 @@ def obtener_reporte(
         usuario=reporte.usuario,
         categoria=reporte.categoria,
         total_likes=total_likes,
-        usuario_dio_like=usuario_dio_like
+        usuario_dio_like=usuario_dio_like,
+        urgencia=reporte.urgencia.value if reporte.urgencia else "media",
+        score_urgencia=reporte.score_urgencia or 0.0
     )
+
+
+# ============================================
+# 🚨 RECALCULAR URGENCIAS (Admin)
+# ============================================
+@router.post("/admin/recalcular-urgencias")
+def recalcular_urgencias(
+    limit: int = 50,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user)
+):
+    """Recalcula la urgencia de los últimos N reportes"""
+    # Verificar que es admin
+    if current_user.rol != "admin":
+        raise HTTPException(status_code=403, detail="Solo administradores pueden hacer esto")
+    
+    from services.urgencia_service import recalcular_urgencias_batch
+    count = recalcular_urgencias_batch(db, limit)
+    
+    return {"mensaje": f"Se recalcularon {count} reportes"}
 
 
 # Agregar estos endpoints en reportes.py
