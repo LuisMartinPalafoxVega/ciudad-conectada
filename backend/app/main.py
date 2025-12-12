@@ -42,7 +42,7 @@ app.include_router(usuarios.router, prefix="/usuarios")
 app.include_router(reportes.router, prefix="/reportes")
 app.include_router(categorias.router, prefix="/categorias")
 app.include_router(admin.router, prefix="/admin")
-app.include_router(mapa.router, prefix="/mapa")
+app.include_router(mapa.router, prefix="/mapa-calor")
 
 # Alias
 app.include_router(usuarios.router, prefix="/perfil")
