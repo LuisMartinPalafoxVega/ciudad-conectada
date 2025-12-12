@@ -13,7 +13,6 @@ import { environment } from '../../../../environments/environment';
   styleUrls: ['./mis-reportes.component.css']
 })
 export class MisReportesComponent implements OnInit {
-
   reportes: Reporte[] = [];
   loading = true;
   currentPage = 1;
@@ -30,7 +29,6 @@ export class MisReportesComponent implements OnInit {
 
   cargarReportes(page: number = 1): void {
     this.loading = true;
-
     this.reporteService.getMisReportes(page).subscribe({
       next: (data: ReportesPaginados) => {
         this.reportes = data.items;
@@ -74,7 +72,6 @@ export class MisReportesComponent implements OnInit {
     }
   }
 
-  // ⭐⭐⭐IMPORTANTE: FUNCIÓN QUE ARREGLA LAS IMÁGENES⭐⭐⭐
   getImagenUrl(nombreImagen?: string): string {
     if (!nombreImagen || nombreImagen.trim() === '') {
       return 'assets/placeholder.jpg';
@@ -85,35 +82,44 @@ export class MisReportesComponent implements OnInit {
   getPaginationArray(): number[] {
     const pages: number[] = [];
     const maxVisible = 5;
-
+    
     if (this.totalPages <= maxVisible) {
-      for (let i = 1; i <= this.totalPages; i++) pages.push(i);
+      for (let i = 1; i <= this.totalPages; i++) {
+        pages.push(i);
+      }
     } else {
       if (this.currentPage <= 3) {
-        for (let i = 1; i <= maxVisible; i++) pages.push(i);
+        for (let i = 1; i <= maxVisible; i++) {
+          pages.push(i);
+        }
       } else if (this.currentPage >= this.totalPages - 2) {
-        for (let i = this.totalPages - maxVisible + 1; i <= this.totalPages; i++) pages.push(i);
+        for (let i = this.totalPages - maxVisible + 1; i <= this.totalPages; i++) {
+          pages.push(i);
+        }
       } else {
-        for (let i = this.currentPage - 2; i <= this.currentPage + 2; i++) pages.push(i);
+        for (let i = this.currentPage - 2; i <= this.currentPage + 2; i++) {
+          pages.push(i);
+        }
       }
     }
-
+    
     return pages;
   }
 
   get totalReportes(): number {
-    return this.reportes.length;
-  }
+  return this.reportes.length;
+}
 
-  get reportesPendientes(): number {
-    return this.reportes.filter(r => r.estado === 'pendiente').length;
-  }
+get reportesPendientes(): number {
+  return this.reportes.filter(r => r.estado === 'pendiente').length;
+}
 
-  get reportesResueltos(): number {
-    return this.reportes.filter(r => r.estado === 'resuelto').length;
-  }
+get reportesResueltos(): number {
+  return this.reportes.filter(r => r.estado === 'resuelto').length;
+}
 
-  get reportesEnProceso(): number {
-    return this.reportes.filter(r => r.estado === 'en_proceso').length;
-  }
+get reportesEnProceso(): number {
+  return this.reportes.filter(r => r.estado === 'en_proceso').length;
+}
+
 }
