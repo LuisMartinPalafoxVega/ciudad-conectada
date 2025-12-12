@@ -57,7 +57,7 @@ export interface ZonaCritica {
   providedIn: 'root'
 })
 export class MapaService {
-  private apiUrl = `${environment.apiUrl}/mapa`;
+  private apiUrl = `${environment.apiUrl}/mapa-calor`;
 
   constructor(private http: HttpClient) {}
 

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { FeedComponent } from './features/reportes/feed/feed.component';
+import { MapaCalorComponent } from './features/reportes/mapa-calor/mapa-calor.component';
 import { NuevoReporteComponent } from './features/reportes/nuevo-reporte/nuevo-reporte.component';
 import { DashboardComponent } from './features/admin/dashboard/dashboard.component';
 import { AuthGuard, AdminGuard } from './core/guards/auth.guard';
