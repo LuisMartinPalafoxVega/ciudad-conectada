@@ -28,6 +28,11 @@
           ➕ Nuevo Reporte
         </a>
 
+        <!-- ✅ NUEVO ENLACE: Mapa de Calor -->
+        <a routerLink="/mapa-calor" routerLinkActive="active" (click)="closeMenu()">
+          🗺️ Mapa de Calor
+        </a>
+
         <a routerLink="/admin" routerLinkActive="active" *ngIf="isAdmin()" (click)="closeMenu()">
           ⚙️ Panel Admin
         </a>

@@ -40,6 +40,15 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
 
+  // ✅ NUEVA RUTA: Mapa de Calor
+  {
+    path: 'mapa-calor',
+    loadComponent: () =>
+      import('./features/reportes/mapa/mapa-calor.component')
+        .then(m => m.MapaCalorComponent),
+    canActivate: [AuthGuard]
+  },
+
   { path: 'admin', component: DashboardComponent, canActivate: [AdminGuard] },
 
   { path: '**', redirectTo: 'login' }

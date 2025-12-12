@@ -50,6 +50,14 @@
             <option value="resuelto">Resuelto</option>
           </select>
         </div>
+
+        <div class="filter-group">
+          <label>Ordenar por</label>
+          <select [(ngModel)]="ordenSeleccionado" (change)="onOrdenChange(ordenSeleccionado)">
+            <option [value]="null">Más reciente</option>
+            <option value="urgencia">Más urgente</option>
+          </select>
+        </div>
         
         <button class="btn-clear-filters" (click)="clearFilters()">
           Limpiar filtros
@@ -82,6 +90,10 @@
 
   <div class="badge-estado" [ngClass]="getEstadoBadgeClass(reporte.estado)">
     {{ getEstadoTexto(reporte.estado) }}
+  </div>
+
+  <div class="badge-urgencia" [ngClass]="getUrgenciaBadgeClass(reporte.urgencia)" *ngIf="reporte.urgencia">
+    {{ getUrgenciaTexto(reporte.urgencia) }}
   </div>
 </a>
 
