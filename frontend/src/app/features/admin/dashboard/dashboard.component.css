@@ -267,40 +267,6 @@ tr:hover {
   background: #4CAF50;
 }
 
-.badge-urgencia {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 12px;
-  font-weight: 700;
-  color: white;
-  text-transform: uppercase;
-}
-
-.badge-urgencia-baja {
-  background: #4CAF50;
-}
-
-.badge-urgencia-media {
-  background: #FFC107;
-  color: #333;
-}
-
-.badge-urgencia-alta {
-  background: #FF9800;
-}
-
-.badge-urgencia-critica {
-  background: #F44336;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.7; }
-  100% { opacity: 1; }
-}
-
 .actions-cell {
   text-align: center;
 }

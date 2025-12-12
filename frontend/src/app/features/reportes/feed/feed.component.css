@@ -152,8 +152,6 @@
   display: block;
   text-decoration: none;
   color: inherit;
-  position: relative;
-  overflow: hidden;
 }
 
 
@@ -162,7 +160,6 @@
   height: 200px;
   object-fit: cover;
   border-radius: 8px;
-  transition: transform 0.3s ease;
 }
 
 
@@ -180,37 +177,6 @@
   font-weight: 700;
   color: white;
   text-transform: uppercase;
-}
-
-.badge-urgencia {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
-  color: white;
-  text-transform: uppercase;
-  backdrop-filter: blur(4px);
-}
-
-.badge-urgencia-baja {
-  background: rgba(76, 175, 80, 0.9);
-}
-
-.badge-urgencia-media {
-  background: rgba(255, 193, 7, 0.9);
-  color: #333;
-}
-
-.badge-urgencia-alta {
-  background: rgba(255, 152, 0, 0.9);
-}
-
-.badge-urgencia-critica {
-  background: rgba(244, 67, 54, 0.95);
-  animation: pulse 2s infinite;
 }
 
 .badge-pendiente {
@@ -346,12 +312,6 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.7; }
-  100% { opacity: 1; }
 }
 
 .empty-icon {

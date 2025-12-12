@@ -89,8 +89,7 @@
   <label for="orden">Ordenar por:</label>
   <select id="orden" [(ngModel)]="ordenSeleccionado" (change)="loadReportes()">
     <option value="">Sin orden</option>
-    <option value="urgencia">Más urgente</option>
-    <option value="fecha">Más reciente</option>
+    <option value="fecha">Fecha más reciente</option>
     <option value="likes">Más likes</option>
   </select>
 </div>
@@ -112,7 +111,6 @@
             <th>Categoría</th>
             <th>Usuario</th>
             <th>Fecha</th>
-            <th>Urgencia</th>
             <th>Likes</th>
             <th>Estado</th>
             <th>Acciones</th>
@@ -130,12 +128,6 @@
             </td>
             <td>{{ reporte.usuario?.nombre || 'Desconocido' }}</td>
             <td>{{ reporte.fecha_creacion | date: 'dd/MM/yyyy' }}</td>
-            <td>
-              <span class="badge-urgencia" 
-                    [ngClass]="getUrgenciaBadgeClass(reporte.urgencia)">
-                {{ getUrgenciaTexto(reporte.urgencia) }}
-              </span>
-            </td>
             <td class="likes-cell">❤️ {{ reporte.total_likes || 0 }}</td>
             <td>
               <span class="badge" [ngClass]="getEstadoBadgeClass(reporte.estado)">

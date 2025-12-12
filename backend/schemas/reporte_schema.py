@@ -34,13 +34,11 @@ class ReporteResponse(ReporteBase):
     fecha_creacion: datetime
     fecha_actualizacion: datetime | None = None
     estado: str
-    urgencia: str = "media"
-    score_urgencia: float = 0.0
     usuario_id: int
     usuario: UsuarioResponse
     categoria: CategoriaResponse
-    total_likes: int = 0
-    usuario_dio_like: bool = False
+    total_likes: int = 0  # ← AGREGAR
+    usuario_dio_like: bool = False  # ← AGREGAR
 
     class Config:
         from_attributes = True
