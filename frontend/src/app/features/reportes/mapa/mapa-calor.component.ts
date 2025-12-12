@@ -2,14 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as L from 'leaflet';
-import 'leaflet.heat/dist/leaflet-heat.js';
+import 'leaflet.heat';
 import { MapaService } from '../../../core/services/mapa.service';
 import { ReporteService } from '../../../core/services/reporte.service';
 import { Categoria } from '../../../core/models/reporte.model';
-
-declare module 'leaflet' {
-  function heatLayer(latlngs: any[], options?: any): any;
-}
 
 @Component({
   selector: 'app-mapa-calor',
