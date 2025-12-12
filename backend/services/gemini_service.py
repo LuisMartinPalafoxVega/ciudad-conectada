@@ -6,7 +6,7 @@ from typing import List, Dict
 
 class GeminiService:
     def __init__(self):
-        # Usa la variable de entorno GEMINI_API_KEY automáticamente
+        # Usa GEMINI_API_KEY automáticamente
         self.client = genai.Client()
 
     def verificar_duplicado(
@@ -18,6 +18,7 @@ class GeminiService:
         reportes_cercanos: List[Dict]
     ) -> Dict:
 
+        # Si no hay reportes para comparar
         if not reportes_cercanos:
             return {
                 "es_duplicado": False,
@@ -25,7 +26,6 @@ class GeminiService:
                 "reportes_similares": []
             }
 
-        # Construir prompt
         prompt = self._construir_prompt(
             nuevo_titulo,
             nueva_descripcion,
@@ -35,14 +35,11 @@ class GeminiService:
         )
 
         try:
-            # 👉 Petición a Gemini 2.5 Flash (API nueva "genai")
             response = self.client.models.generate_content(
                 model="gemini-2.5-flash",
                 contents=prompt
             )
-
-            texto = response.text
-            return self._parsear_respuesta(texto)
+            return self._parsear_respuesta(response.text)
 
         except Exception as e:
             print("❌ Error en Gemini:", e)
@@ -62,7 +59,6 @@ class GeminiService:
         reportes_cercanos: List[Dict]
     ) -> str:
 
-        # Ajustar si el back envía "latitud" y "longitud"
         texto_reportes = ""
         for r in reportes_cercanos:
             texto_reportes += (
@@ -74,17 +70,16 @@ class GeminiService:
             )
 
         prompt = f"""
-Analiza si un nuevo reporte es DUPLICADO de reportes anteriores.
+Analiza si un nuevo reporte es duplicado.
 
-Un reporte se considera duplicado cuando:
-- describe el mismo problema,
-- ocurre en la misma ubicación o muy cerca,
-- es de la misma categoría,
-- usa títulos o palabras similares.
+Un reporte es duplicado si:
+- Describe el mismo problema
+- Está en la misma ubicación o muy cerca
+- Tiene título/descripción similares
 
-Responde SOLO con JSON válido. Sin explicaciones.
+Responde SOLO con JSON válido.
 
-Formato estricto:
+Formato:
 
 {{
   "es_duplicado": true/false,
@@ -101,10 +96,10 @@ Formato estricto:
 Nuevo reporte:
 Título: "{nuevo_titulo}"
 Descripción: "{nueva_descripcion}"
-Latitud: {nuevo_lat}
+Latitud: {nueva_lat}
 Longitud: {nueva_lng}
 
-Reportes a comparar:
+Reportes cercanos:
 {texto_reportes}
 
 Devuelve SOLO el JSON.
@@ -114,7 +109,7 @@ Devuelve SOLO el JSON.
     def _parsear_respuesta(self, texto: str) -> Dict:
         texto = texto.strip()
 
-        # Eliminar bloques ``` si aparecen
+        # Quitar bloques ``` de Gemini
         if texto.startswith("```json"):
             texto = texto[len("```json"):].strip()
         if texto.startswith("```"):
@@ -124,8 +119,8 @@ Devuelve SOLO el JSON.
 
         try:
             return json.loads(texto)
-        except Exception:
-            print("⚠️ Gemini devolvió JSON inválido:", texto)
+        except:
+            print("⚠️ Gemini envió JSON inválido:", texto)
             return {
                 "es_duplicado": False,
                 "similitud": 0,
