@@ -14,29 +14,30 @@
     <div class="navbar-menu" [class.active]="isMenuOpen">
 
       <!-- 🔹 LINKS VISIBLES SOLO SI ESTÁ LOGUEADO -->
-<div class="navbar-links" *ngIf="currentUser">
+      <div class="navbar-links" *ngIf="currentUser">
         
-  <a routerLink="/feed" routerLinkActive="active" (click)="closeMenu()">
-    🏠 Inicio
-  </a>
+        <a routerLink="/feed" routerLinkActive="active" (click)="closeMenu()">
+          🏠 Inicio
+        </a>
 
-  <a routerLink="/mis-reportes" routerLinkActive="active" (click)="closeMenu()">
-    📋 Mis Reportes
-  </a>
+        <a routerLink="/mis-reportes" routerLinkActive="active" (click)="closeMenu()">
+          📋 Mis Reportes
+        </a>
 
-  <a routerLink="/nuevo-reporte" routerLinkActive="active" (click)="closeMenu()">
-    ➕ Nuevo Reporte
-  </a>
+        <a routerLink="/nuevo-reporte" routerLinkActive="active" (click)="closeMenu()">
+          ➕ Nuevo Reporte
+        </a>
 
-  <!-- ❌ AQUÍ ANTES TENÍAS mapa-calor -->
-  <!-- ❌ Ya no lo necesitas si tu ruta es /mapa -->
+        <!-- ✅ NUEVO ENLACE: Mapa de Calor -->
+        <a routerLink="/mapa-calor" routerLinkActive="active" (click)="closeMenu()">
+          🗺️ Mapa de Calor
+        </a>
 
-  <a routerLink="/admin" routerLinkActive="active" *ngIf="isAdmin()" (click)="closeMenu()">
-    ⚙️ Panel Admin
-  </a>
+        <a routerLink="/admin" routerLinkActive="active" *ngIf="isAdmin()" (click)="closeMenu()">
+          ⚙️ Panel Admin
+        </a>
 
-</div>
-
+      </div>
 
       <!-- 🔹 BOTONES CUANDO NO HAY SESIÓN -->
       <div class="navbar-actions" *ngIf="!currentUser">
