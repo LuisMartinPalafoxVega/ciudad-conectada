@@ -9,7 +9,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 
 class GeminiService:
     def __init__(self):
-        self.model = genai.GenerativeModel('gemini-pro')
+        self.model = genai.GenerativeModel("gemini-1.5-flash")
     
     def verificar_duplicado(
         self,
