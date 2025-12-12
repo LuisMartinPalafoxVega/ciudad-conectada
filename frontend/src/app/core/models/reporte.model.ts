@@ -22,7 +22,10 @@ export interface Reporte {
   usuario: Usuario;
   total_likes: number;
   usuario_dio_like?: boolean;
+  
 }
+
+
 
 export interface ReportesPaginados {
   items: Reporte[];

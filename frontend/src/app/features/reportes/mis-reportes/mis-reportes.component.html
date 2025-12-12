@@ -1,138 +1,63 @@
-<div class="mis-reportes-container">
-  <!-- Header -->
-  <div class="page-header">
-    <h1>
-      <span class="header-icon">📋</span>
-      Mis Reportes
-    </h1>
-    <a routerLink="/nuevo-reporte" class="btn-new-report">
-      <span>➕</span>
-      <span>Nuevo Reporte</span>
-    </a>
-  </div>
+<div class="contenedor-mis-reportes">
+  
+  <h2>Mis Reportes</h2>
 
-  <!-- Loading -->
-  <div class="loading-container" *ngIf="loading">
-    <div class="spinner"></div>
-    <p>Cargando tus reportes...</p>
-  </div>
+  <!-- Loader -->
+  <div *ngIf="loading" class="loader">Cargando...</div>
 
-  <!-- Empty State -->
-  <div class="empty-state" *ngIf="!loading && reportes.length === 0">
-    <div class="empty-icon">📭</div>
-    <h3>No tienes reportes aún</h3>
-    <p>Crea tu primer reporte para comenzar a contribuir con tu comunidad</p>
-    <a routerLink="/nuevo-reporte" class="btn-new-report">
-      <span>➕</span>
-      <span>Crear Primer Reporte</span>
-    </a>
-  </div>
+  <!-- Lista de reportes -->
+  <div class="lista-reportes" *ngIf="!loading && reportes.length > 0">
+    
+    <div class="reporte-card" *ngFor="let reporte of reportes">
 
-  <!-- Estadísticas -->
-<div class="stats-cards" *ngIf="!loading && reportes.length > 0">
-  <div class="stat-card">
-    <div class="stat-icon">📊</div>
-    <div class="stat-info">
-      <div class="stat-value">{{ totalReportes }}</div>
-      <div class="stat-label">Total de Reportes</div>
-    </div>
-  </div>
-
-  <div class="stat-card warning">
-    <div class="stat-icon">⏳</div>
-    <div class="stat-info">
-      <div class="stat-value">{{ reportesPendientes }}</div>
-      <div class="stat-label">Pendientes</div>
-    </div>
-  </div>
-
-  <div class="stat-card process">
-    <div class="stat-icon">🔄</div>
-    <div class="stat-info">
-      <div class="stat-value">{{ reportesEnProceso }}</div>
-      <div class="stat-label">En Proceso</div>
-    </div>
-  </div>
-
-  <div class="stat-card success">
-    <div class="stat-icon">✅</div>
-    <div class="stat-info">
-      <div class="stat-value">{{ reportesResueltos }}</div>
-      <div class="stat-label">Resueltos</div>
-    </div>
-  </div>
-</div>
-
-
-<div class="reportes-grid" *ngIf="!loading && reportes.length > 0">
-  <div class="reporte-card" *ngFor="let reporte of reportes">
-    <!-- Imagen clickeable -->
-    <a [routerLink]="['/detalle-reporte', reporte.id]">
       <img 
-        [src]="getImagenUrl(reporte.imagen_url)" 
-        [alt]="reporte.titulo"
-        class="card-image"
+        class="reporte-img"
+        [src]="getImagenUrl(reporte.imagen_url)"
+        alt="Imagen del reporte"
       />
-    </a>
 
-    <!-- Contenido NO clickeable -->
-    <div class="card-content">
-      <!-- Badges -->
-      <div class="card-badges">
-        <span class="badge" [ngClass]="getBadgeClass(reporte.estado)">
+      <div class="reporte-info">
+        <h3>{{ reporte.titulo }}</h3>
+        <p>{{ reporte.descripcion }}</p>
+
+        <span [ngClass]="getBadgeClass(reporte.estado)" class="estado-badge">
           {{ getEstadoTexto(reporte.estado) }}
         </span>
-        <span class="badge badge-category" [style.background-color]="reporte.categoria?.color">
-          {{ reporte.categoria?.icono }} {{ reporte.categoria?.nombre }}
-        </span>
+
+        <button class="btn-detalle" (click)="verDetalle(reporte.id)">
+          Ver detalles
+        </button>
       </div>
 
-      <!-- Título -->
-      <h3 class="card-title">{{ reporte.titulo }}</h3>
-
-      <!-- Descripción -->
-      <p class="card-description">
-        {{ reporte.descripcion.length > 120 ? reporte.descripcion.substring(0, 120) + '...' : reporte.descripcion }}
-      </p>
-
-      <!-- Footer -->
-      <div class="card-footer">
-        <span class="card-date">
-          <span>📅</span>
-          <span>{{ reporte.fecha_creacion | date: 'dd/MM/yyyy' }}</span>
-        </span>
-        <span class="card-likes">
-          <span>{{ reporte.usuario_dio_like ? '❤️' : '🤍' }}</span>
-          <span>{{ reporte.total_likes }}</span>
-        </span>
-      </div>
     </div>
-  </div>
-</div>
 
+  </div>
+
+  <!-- Sin reportes -->
+  <div *ngIf="!loading && reportes.length === 0" class="sin-reportes">
+    No tienes reportes todavía.
+  </div>
 
   <!-- Paginación -->
-  <div class="pagination" *ngIf="!loading && totalPages > 1">
+  <div class="paginacion" *ngIf="totalPages > 1">
     <button 
-      (click)="cambiarPagina(currentPage - 1)"
-      [disabled]="currentPage === 1"
-    >
-      ← Anterior
+      [disabled]="currentPage === 1" 
+      (click)="cambiarPagina(currentPage - 1)">
+      « Anterior
     </button>
 
     <button 
       *ngFor="let page of getPaginationArray()"
       (click)="cambiarPagina(page)"
-      [class.active]="currentPage === page"
-    >
+      [class.active]="page === currentPage">
       {{ page }}
     </button>
 
     <button 
-      (click)="cambiarPagina(currentPage + 1)"
-      [disabled]="currentPage === totalPages"
-    >
-      Siguiente →
+      [disabled]="currentPage === totalPages" 
+      (click)="cambiarPagina(currentPage + 1)">
+      Siguiente »
     </button>
   </div>
+
 </div>
