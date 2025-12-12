@@ -117,6 +117,10 @@ export class ReporteService {
     return this.http.delete(`${this.apiUrl}/${reporteId}/comentarios/${comentarioId}`);
   }
 
+  verificarDuplicado(formData: FormData): Observable<any> {
+  return this.http.post(`${this.apiUrl}/verificar-duplicado`, formData);
+}
+
   // ============================================
   // ADMIN ENDPOINTS
   // ============================================

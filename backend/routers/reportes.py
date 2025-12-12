@@ -182,6 +182,60 @@ def obtener_reportes(
         has_prev=page > 1
     )
 
+# ============================================
+# 🤖 VERIFICAR DUPLICADO CON IA
+# ============================================
+@router.post("/verificar-duplicado")
+def verificar_reporte_duplicado(
+    titulo: str = Form(...),
+    descripcion: str = Form(...),
+    latitud: float = Form(...),
+    longitud: float = Form(...),
+    categoria_id: int = Form(...),
+    db: Session = Depends(get_db)
+):
+    """Verifica si un reporte es duplicado usando Gemini AI"""
+    from services.gemini_service import gemini_service
+    
+    # Buscar reportes cercanos (radio de ~500m y misma categoría)
+    radio = 0.005  # aprox 500 metros
+    
+    reportes_cercanos = db.query(Reporte).filter(
+        Reporte.categoria_id == categoria_id,
+        Reporte.latitud.between(latitud - radio, latitud + radio),
+        Reporte.longitud.between(longitud - radio, longitud + radio),
+        Reporte.estado != "resuelto"  # No comparar con resueltos
+    ).limit(5).all()  # Máximo 5 para no saturar a Gemini
+    
+    if not reportes_cercanos:
+        return {
+            "es_duplicado": False,
+            "mensaje": "No hay reportes similares en la zona"
+        }
+    
+    # Formatear reportes para Gemini
+    reportes_data = [
+        {
+            "id": r.id,
+            "titulo": r.titulo,
+            "descripcion": r.descripcion,
+            "latitud": float(r.latitud),
+            "longitud": float(r.longitud),
+            "estado": r.estado.value
+        }
+        for r in reportes_cercanos
+    ]
+    
+    # Llamar a Gemini
+    resultado = gemini_service.verificar_duplicado(
+        titulo,
+        descripcion,
+        latitud,
+        longitud,
+        reportes_data
+    )
+    
+    return resultado
 
 # ============================================
 # 📝 CREAR REPORTE - CORREGIDO
