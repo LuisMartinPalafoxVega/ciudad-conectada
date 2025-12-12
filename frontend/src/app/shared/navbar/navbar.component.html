@@ -17,7 +17,7 @@
       <div class="navbar-links" *ngIf="currentUser">
         
         <a routerLink="/feed" routerLinkActive="active" (click)="closeMenu()">
-          🏠 Inicio
+          🏛️ Inicio
         </a>
 
         <a routerLink="/mis-reportes" routerLinkActive="active" (click)="closeMenu()">
@@ -28,9 +28,8 @@
           ➕ Nuevo Reporte
         </a>
 
-        <!-- ✅ NUEVO ENLACE: Mapa de Calor -->
         <a routerLink="/mapa-calor" routerLinkActive="active" (click)="closeMenu()">
-          🗺️ Mapa de Calor
+          🗺️ Mapa
         </a>
 
         <a routerLink="/admin" routerLinkActive="active" *ngIf="isAdmin()" (click)="closeMenu()">

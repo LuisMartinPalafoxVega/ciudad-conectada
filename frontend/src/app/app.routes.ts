@@ -44,7 +44,7 @@ export const routes: Routes = [
   {
     path: 'mapa-calor',
     loadComponent: () =>
-      import('./features/reportes/mapa/mapa-calor.component')
+      import('./features/reportes/mapa-calor/mapa-calor.component')
         .then(m => m.MapaCalorComponent),
     canActivate: [AuthGuard]
   },
