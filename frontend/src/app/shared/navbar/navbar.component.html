@@ -1,5 +1,6 @@
 <nav class="navbar">
   <div class="navbar-container">
+
     <!-- Marca -->
     <div class="navbar-brand" routerLink="/feed">
       <div class="brand-icon">🏛️</div>
@@ -15,16 +16,28 @@
 
       <!-- 🔹 LINKS VISIBLES SOLO SI ESTÁ LOGUEADO -->
       <div class="navbar-links" *ngIf="currentUser">
-        
+
         <a routerLink="/feed" routerLinkActive="active" (click)="closeMenu()">
           🏛️ Inicio
         </a>
 
-        <a routerLink="/mis-reportes" routerLinkActive="active" (click)="closeMenu()">
+        <!-- ❌ OCULTO PARA ADMIN -->
+        <a 
+          routerLink="/mis-reportes" 
+          routerLinkActive="active" 
+          (click)="closeMenu()"
+          *ngIf="!isAdmin()"
+        >
           📋 Mis Reportes
         </a>
 
-        <a routerLink="/nuevo-reporte" routerLinkActive="active" (click)="closeMenu()">
+        <!-- ❌ OCULTO PARA ADMIN -->
+        <a 
+          routerLink="/nuevo-reporte" 
+          routerLinkActive="active" 
+          (click)="closeMenu()"
+          *ngIf="!isAdmin()"
+        >
           ➕ Nuevo Reporte
         </a>
 
@@ -32,6 +45,7 @@
           🗺️ Mapa
         </a>
 
+        <!-- ✔️ SOLO ADMIN -->
         <a routerLink="/admin" routerLinkActive="active" *ngIf="isAdmin()" (click)="closeMenu()">
           ⚙️ Panel Admin
         </a>
@@ -52,23 +66,26 @@
       <div class="navbar-user" *ngIf="currentUser">
 
         <div class="user-info">
-          <!-- ✅ MOSTRAR FOTO O INICIALES -->
+
+          <!-- Avatar -->
           <div class="user-avatar" *ngIf="!currentUser.foto_url">
             {{ getInitials(currentUser.nombre) }}
           </div>
+
           <img 
             *ngIf="currentUser.foto_url" 
-            [src]="currentUser.foto_url" 
+            [src]="currentUser.foto_url"
             class="user-avatar user-avatar-image"
             [alt]="currentUser.nombre"
           />
-          
+
           <div class="user-details">
             <span class="user-name">{{ currentUser.nombre }}</span>
             <span class="user-role">
               {{ currentUser.rol === 'administrador' ? 'Administrador' : 'Usuario' }}
             </span>
           </div>
+
         </div>
 
         <!-- Menú del usuario -->
