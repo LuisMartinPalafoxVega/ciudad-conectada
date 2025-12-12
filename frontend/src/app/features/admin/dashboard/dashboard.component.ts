@@ -20,7 +20,6 @@ export class DashboardComponent implements OnInit {
 
   estadoSeleccionado: string | null = null;
   currentPage = 1;
-  ordenSeleccionado: string | null = null;
 
   constructor(private reporteService: ReporteService) {}
 
@@ -41,6 +40,7 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+  ordenSeleccionado: string | null = null;
 
 loadReportes(): void {
   this.loading = true;
@@ -123,26 +123,6 @@ loadReportes(): void {
       case 'en_proceso': return 'En Proceso';
       case 'resuelto': return 'Resuelto';
       default: return estado;
-    }
-  }
-
-  getUrgenciaBadgeClass(urgencia?: string): string {
-    switch (urgencia) {
-      case 'baja': return 'badge-urgencia-baja';
-      case 'media': return 'badge-urgencia-media';
-      case 'alta': return 'badge-urgencia-alta';
-      case 'critica': return 'badge-urgencia-critica';
-      default: return '';
-    }
-  }
-
-  getUrgenciaTexto(urgencia?: string): string {
-    switch (urgencia) {
-      case 'baja': return 'Baja';
-      case 'media': return 'Media';
-      case 'alta': return 'Alta';
-      case 'critica': return '🚨 Crítica';
-      default: return 'Normal';
     }
   }
 

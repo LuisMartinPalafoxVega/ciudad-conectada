@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from .database import engine, Base
-from routers import auth, reportes, usuarios, categorias, admin, comentarios
+from routers import auth, reportes, usuarios, categorias, admin, comentarios, mapa
 import os
 
 # Crear las tablas
@@ -42,6 +42,7 @@ app.include_router(usuarios.router, prefix="/usuarios")
 app.include_router(reportes.router, prefix="/reportes")
 app.include_router(categorias.router, prefix="/categorias")
 app.include_router(admin.router, prefix="/admin")
+app.include_router(mapa.router, prefix="/mapa")
 
 # Alias
 app.include_router(usuarios.router, prefix="/perfil")
