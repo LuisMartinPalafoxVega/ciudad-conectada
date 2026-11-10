@@ -8,7 +8,7 @@ import { DashboardComponent } from './features/admin/dashboard/dashboard.compone
 import { AuthGuard, AdminGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', component: LoginComponent, pathMatch: 'full' },
 
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
