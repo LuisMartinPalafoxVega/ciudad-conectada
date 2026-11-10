@@ -76,7 +76,7 @@ export class PerfilComponent implements OnInit {
   if (userStr) {
     const user = JSON.parse(userStr);
 
-    // 🔥 AQUI SE REPARA EL PROBLEMA 🔥
+    // AQUI SE REPARA EL PROBLEMA
     if (user.foto_url && !user.foto_url.startsWith('http')) {
       user.foto_url = `${environment.apiUrl}${user.foto_url}`;
     }
@@ -136,20 +136,20 @@ export class PerfilComponent implements OnInit {
       // Actualizar la foto en el componente
       this.usuario.foto_url = fotoUrl;
       
-      // ✅ Actualizar usuario completo
+      //  Actualizar usuario completo
       const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
       currentUser.foto_url = fotoUrl;
       
-      // ✅ Usar el método público del AuthService
+      //  Usar el método público del AuthService
       this.authService.updateCurrentUser(currentUser);
       
       this.uploadingPhoto = false;
       this.showSuccess('Foto de perfil actualizada correctamente');
       
-      console.log('✅ Foto actualizada:', fotoUrl);
+      console.log(' Foto actualizada:', fotoUrl);
     },
     error: (error) => {
-      console.error('❌ Error al subir foto:', error);
+      console.error(' Error al subir foto:', error);
       this.uploadingPhoto = false;
       this.showError('Error al subir la foto. Intenta de nuevo.');
     }

@@ -1,7 +1,7 @@
 <div class="mapa-container">
-  <!-- 🎛️ Panel de Control -->
+  <!-- Panel de control -->
   <div class="controls-panel">
-    <h2>🗺️ Mapa de Reportes</h2>
+    <h2><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i> Mapa de Reportes</h2>
     
     <!-- Filtros -->
     <div class="filters-section">
@@ -12,7 +12,7 @@
         <select [(ngModel)]="categoriaSeleccionada" (change)="aplicarFiltros()">
           <option [value]="null">Todas las categorías</option>
           <option *ngFor="let cat of categorias" [value]="cat.id">
-            {{ cat.icono }} {{ cat.nombre }}
+            {{ cat.nombre }}
           </option>
         </select>
       </div>
@@ -21,14 +21,14 @@
         <label>Estado</label>
         <select [(ngModel)]="estadoSeleccionado" (change)="aplicarFiltros()">
           <option [value]="null">Todos los estados</option>
-          <option value="pendiente">⏳ Pendiente</option>
-          <option value="en_proceso">🔄 En Proceso</option>
-          <option value="resuelto">✅ Resuelto</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="en_proceso">En Proceso</option>
+          <option value="resuelto">Resuelto</option>
         </select>
       </div>
 
       <button class="btn-clear" (click)="limpiarFiltros()">
-        🗑️ Limpiar Filtros
+        <i class="fa-solid fa-filter-circle-xmark" aria-hidden="true"></i> Limpiar Filtros
       </button>
     </div>
 
@@ -39,19 +39,19 @@
         <button 
           [class.active]="modoVista === 'heatmap'"
           (click)="cambiarModoVista('heatmap')">
-          🔥 Mapa de Calor
+          <i class="fa-solid fa-fire" aria-hidden="true"></i> Mapa de Calor
         </button>
         <button 
           [class.active]="modoVista === 'markers'"
           (click)="cambiarModoVista('markers')">
-          📍 Marcadores
+          <i class="fa-solid fa-location-dot" aria-hidden="true"></i> Marcadores
         </button>
       </div>
     </div>
 
     <!-- Estadísticas Generales -->
     <div class="stats-section">
-      <h3>📊 Estadísticas</h3>
+      <h3><i class="fa-solid fa-chart-column" aria-hidden="true"></i> Estadísticas</h3>
       <div class="stat-card">
         <span class="stat-label">Total de Reportes</span>
         <span class="stat-value">{{ totalReportes }}</span>
@@ -60,7 +60,7 @@
 
     <!-- Estadísticas de Zona (si hay) -->
     <div class="zona-stats" *ngIf="mostrandoEstadisticas && estadisticasZona">
-      <h3>📍 Estadísticas de Zona</h3>
+      <h3><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Estadísticas de Zona</h3>
       
       <div class="stat-grid">
         <div class="stat-item">
@@ -98,7 +98,7 @@
     </div>
   </div>
 
-  <!-- 🗺️ Mapa -->
+  <!-- Mapa -->
   <div class="map-wrapper">
     <div id="mapa-calor-container" class="map-container"></div>
     

@@ -82,7 +82,7 @@ export class DetalleReporteComponent implements OnInit, AfterViewInit, OnDestroy
     }).setView([this.reporte.latitud, this.reporte.longitud], 15);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
+      attribution: ' OpenStreetMap contributors'
     }).addTo(this.map);
 
     L.marker([this.reporte.latitud, this.reporte.longitud]).addTo(this.map);
@@ -121,11 +121,11 @@ export class DetalleReporteComponent implements OnInit, AfterViewInit, OnDestroy
   //  CARGAR COMENTARIOS + FIX DE FOTOS
   // =====================================================
   cargarComentarios(reporteId: number): void {
-  console.log('📥 Cargando comentarios para reporte:', reporteId);
+  console.log(' Cargando comentarios para reporte:', reporteId);
   
   this.reporteService.getComentarios(reporteId).subscribe({
     next: (comentarios) => {
-      console.log('📦 Comentarios recibidos del backend:', comentarios.length);
+      console.log(' Comentarios recibidos del backend:', comentarios.length);
       
       // Normalizar fotos (agregar URL completa si falta)
       comentarios.forEach((c: any) => {
@@ -134,7 +134,7 @@ export class DetalleReporteComponent implements OnInit, AfterViewInit, OnDestroy
         }
       });
 
-      // ✅ CONSTRUIR ÁRBOL DE COMENTARIOS
+      //  CONSTRUIR ÁRBOL DE COMENTARIOS
       // Crear un mapa de todos los comentarios por ID
       const mapa: Record<number, any> = {};
       comentarios.forEach((c: any) => {
@@ -172,13 +172,13 @@ export class DetalleReporteComponent implements OnInit, AfterViewInit, OnDestroy
 
       this.comentarios = raiz;
       
-      console.log('✅ Comentarios organizados:', this.comentarios.length, 'principales');
+      console.log(' Comentarios organizados:', this.comentarios.length, 'principales');
       this.comentarios.forEach(c => {
         console.log(`  - ${c.id}: ${c.respuestas?.length || 0} respuestas`);
       });
     },
     error: (err) => {
-      console.error('❌ Error al cargar comentarios:', err);
+      console.error(' Error al cargar comentarios:', err);
     }
   });
 }
@@ -298,13 +298,13 @@ export class DetalleReporteComponent implements OnInit, AfterViewInit, OnDestroy
   enviarRespuesta(parentId: number): void {
   if (!this.reporte || !this.textoRespuesta.trim()) return;
 
-  // ✅ Evitar doble clic
+  //  Evitar doble clic
   if (this.enviandoComentario) return;
   
   this.enviandoComentario = true;
 
-  console.log('🔵 Enviando respuesta al comentario:', parentId);
-  console.log('🔵 Contenido:', this.textoRespuesta);
+  console.log(' Enviando respuesta al comentario:', parentId);
+  console.log(' Contenido:', this.textoRespuesta);
 
   this.reporteService.createComentario(
     this.reporte.id, 
@@ -312,16 +312,16 @@ export class DetalleReporteComponent implements OnInit, AfterViewInit, OnDestroy
     parentId
   ).subscribe({
     next: (respuesta) => {
-      console.log('✅ Respuesta creada:', respuesta);
+      console.log(' Respuesta creada:', respuesta);
       
-      // ✅ SOLO recargar comentarios, NO agregar manualmente
+      //  SOLO recargar comentarios, NO agregar manualmente
       this.cargarComentarios(this.reporte!.id);
       
       this.cancelarRespuesta();
       this.enviandoComentario = false;
     },
     error: (err) => {
-      console.error('❌ Error al crear respuesta:', err);
+      console.error(' Error al crear respuesta:', err);
       alert('Error al publicar respuesta');
       this.enviandoComentario = false;
     }

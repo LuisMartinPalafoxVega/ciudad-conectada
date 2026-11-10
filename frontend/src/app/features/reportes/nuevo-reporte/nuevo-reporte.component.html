@@ -73,7 +73,7 @@
       </p>
       
       <button type="button" class="btn-location" (click)="useMyLocation()">
-        📍 Usar mi ubicación actual
+        <i class="fa-solid fa-location-crosshairs" aria-hidden="true"></i> Usar mi ubicación actual
       </button>
 
       <div id="map" class="map-container"></div>
@@ -100,7 +100,7 @@
 
       <div class="image-upload" *ngIf="!imagenPreview">
         <label for="imagen" class="upload-label">
-          <div class="upload-icon">📷</div>
+          <div class="upload-icon"><i class="fa-solid fa-camera" aria-hidden="true"></i></div>
           <span>Haz clic para subir una imagen</span>
           <span class="upload-hint">JPG o PNG, máximo 5MB</span>
         </label>

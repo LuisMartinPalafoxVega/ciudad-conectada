@@ -9,7 +9,7 @@ export interface Comentario {
     id: number;
     nombre: string;
     email: string;
-    foto_url?: string | null;  // ✅ AGREGAR
+    foto_url?: string | null;  //  AGREGAR
   };
 
   fecha_creacion: string;

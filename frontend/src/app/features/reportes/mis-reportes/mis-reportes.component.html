@@ -2,12 +2,12 @@
   <!-- Header -->
   <div class="page-header">
     <h1>
-      <span class="header-icon">📋</span>
+      <i class="fa-solid fa-clipboard-list header-icon" aria-hidden="true"></i>
       Mis Reportes
     </h1>
     <a routerLink="/nuevo-reporte" class="btn-new-report">
-      <span>➕</span>
-      <span>Nuevo Reporte</span>
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      Nuevo Reporte
     </a>
   </div>
 
@@ -19,19 +19,19 @@
 
   <!-- Empty State -->
   <div class="empty-state" *ngIf="!loading && reportes.length === 0">
-    <div class="empty-icon">📭</div>
+    <div class="empty-icon"><i class="fa-regular fa-folder-open" aria-hidden="true"></i></div>
     <h3>No tienes reportes aún</h3>
     <p>Crea tu primer reporte para comenzar a contribuir con tu comunidad</p>
     <a routerLink="/nuevo-reporte" class="btn-new-report">
-      <span>➕</span>
-      <span>Crear Primer Reporte</span>
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      Crear Primer Reporte
     </a>
   </div>
 
   <!-- Estadísticas -->
 <div class="stats-cards" *ngIf="!loading && reportes.length > 0">
   <div class="stat-card">
-    <div class="stat-icon">📊</div>
+    <div class="stat-icon"><i class="fa-solid fa-chart-column" aria-hidden="true"></i></div>
     <div class="stat-info">
       <div class="stat-value">{{ totalReportes }}</div>
       <div class="stat-label">Total de Reportes</div>
@@ -39,7 +39,7 @@
   </div>
 
   <div class="stat-card warning">
-    <div class="stat-icon">⏳</div>
+    <div class="stat-icon"><i class="fa-regular fa-clock" aria-hidden="true"></i></div>
     <div class="stat-info">
       <div class="stat-value">{{ reportesPendientes }}</div>
       <div class="stat-label">Pendientes</div>
@@ -47,7 +47,7 @@
   </div>
 
   <div class="stat-card process">
-    <div class="stat-icon">🔄</div>
+    <div class="stat-icon"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i></div>
     <div class="stat-info">
       <div class="stat-value">{{ reportesEnProceso }}</div>
       <div class="stat-label">En Proceso</div>
@@ -55,7 +55,7 @@
   </div>
 
   <div class="stat-card success">
-    <div class="stat-icon">✅</div>
+    <div class="stat-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></div>
     <div class="stat-info">
       <div class="stat-value">{{ reportesResueltos }}</div>
       <div class="stat-label">Resueltos</div>
@@ -83,7 +83,7 @@
           {{ getEstadoTexto(reporte.estado) }}
         </span>
         <span class="badge badge-category" [style.background-color]="reporte.categoria?.color">
-          {{ reporte.categoria?.icono }} {{ reporte.categoria?.nombre }}
+          {{ reporte.categoria?.nombre }}
         </span>
       </div>
 
@@ -98,11 +98,11 @@
       <!-- Footer -->
       <div class="card-footer">
         <span class="card-date">
-          <span>📅</span>
+          <i class="fa-regular fa-calendar" aria-hidden="true"></i>
           <span>{{ reporte.fecha_creacion | date: 'dd/MM/yyyy' }}</span>
         </span>
         <span class="card-likes">
-          <span>{{ reporte.usuario_dio_like ? '❤️' : '🤍' }}</span>
+          <i class="fa-heart" [class.fa-solid]="reporte.usuario_dio_like" [class.fa-regular]="!reporte.usuario_dio_like" aria-hidden="true"></i>
           <span>{{ reporte.total_likes }}</span>
         </span>
       </div>

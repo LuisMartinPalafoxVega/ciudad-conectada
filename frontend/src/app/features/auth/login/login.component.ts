@@ -43,12 +43,12 @@ export class LoginComponent {
 
     this.authService.login(this.loginForm.value).subscribe({
       next: (response) => {
-        console.log('✅ Login correcto:', response);
+        console.log(' Login correcto:', response);
         this.loading = false;
         this.router.navigate(['/feed']);  // o la ruta que tengas para el inicio
        },
         error: (err) => {
-          console.error('❌ Error en login:', err);
+          console.error(' Error en login:', err);
           this.error = err.error?.mensaje || 'Error en el inicio de sesión. Por favor, intenta de nuevo.';
           this.loading = false;
       }

@@ -41,7 +41,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
 
-  // ✅ NUEVA RUTA: Mapa de Calor
+  //  NUEVA RUTA: Mapa de Calor
   {
     path: 'mapa-calor',
     loadComponent: () =>

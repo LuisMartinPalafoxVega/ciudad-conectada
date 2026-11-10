@@ -27,10 +27,10 @@ export class AuthService {
     if (token && userStr) {
       try {
         const user = JSON.parse(userStr);
-        console.log('✅ Usuario cargado desde localStorage:', user);
+        console.log(' Usuario cargado desde localStorage:', user);
         this.currentUserSubject.next(user);
       } catch (e) {
-        console.error('❌ Error al cargar usuario:', e);
+        console.error(' Error al cargar usuario:', e);
         this.logout();
       }
     }
@@ -45,7 +45,7 @@ export class AuthService {
   login(data: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, data).pipe(
       tap(response => {
-        console.log('✅ Respuesta del login:', response);
+        console.log(' Respuesta del login:', response);
         this.handleAuthSuccess(response);
       })
     );
@@ -64,7 +64,7 @@ export class AuthService {
   }
 
   private handleAuthSuccess(response: AuthResponse): void {
-    console.log('💾 Guardando usuario en localStorage:', response.usuario);
+    console.log(' Guardando usuario en localStorage:', response.usuario);
     
     localStorage.setItem('access_token', response.access_token);
     localStorage.setItem('refresh_token', response.refresh_token);
@@ -95,7 +95,7 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  // ✅ MÉTODO PÚBLICO para actualizar el usuario desde otros componentes
+  //  MÉTODO PÚBLICO para actualizar el usuario desde otros componentes
   updateCurrentUser(user: Usuario): void {
     localStorage.setItem('currentUser', JSON.stringify(user));
     this.currentUserSubject.next(user);

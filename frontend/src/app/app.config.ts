@@ -10,6 +10,6 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([AuthInterceptor]))  // ✅ Agregar esto
+    provideHttpClient(withInterceptors([AuthInterceptor]))  //  Agregar esto
   ]
 };

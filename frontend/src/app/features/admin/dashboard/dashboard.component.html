@@ -7,7 +7,7 @@
   <!-- Tarjetas de estadísticas -->
   <div class="stats-grid" *ngIf="estadisticas">
     <div class="stat-card total" (click)="filterByEstado(null)">
-      <div class="stat-icon">📊</div>
+      <div class="stat-icon"><i class="fa-solid fa-chart-column" aria-hidden="true"></i></div>
       <div class="stat-content">
         <div class="stat-value">{{ estadisticas.total_reportes || 0 }}</div>
         <div class="stat-label">Reportes Totales</div>
@@ -15,7 +15,7 @@
     </div>
 
     <div class="stat-card pendientes" (click)="filterByEstado('pendiente')">
-      <div class="stat-icon">⏳</div>
+      <div class="stat-icon"><i class="fa-regular fa-clock" aria-hidden="true"></i></div>
       <div class="stat-content">
         <div class="stat-value">{{ estadisticas.pendientes || 0 }}</div>
         <div class="stat-label">Pendientes</div>
@@ -24,7 +24,7 @@
     </div>
 
     <div class="stat-card proceso" (click)="filterByEstado('en_proceso')">
-      <div class="stat-icon">🔄</div>
+      <div class="stat-icon"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i></div>
       <div class="stat-content">
         <div class="stat-value">{{ estadisticas.en_proceso || 0 }}</div>
         <div class="stat-label">En Proceso</div>
@@ -33,7 +33,7 @@
     </div>
 
     <div class="stat-card resueltos" (click)="filterByEstado('resuelto')">
-      <div class="stat-icon">✅</div>
+      <div class="stat-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></div>
       <div class="stat-content">
         <div class="stat-value">{{ estadisticas.resueltos || 0 }}</div>
         <div class="stat-label">Resueltos</div>
@@ -129,7 +129,7 @@
             </td>
             <td>{{ reporte.usuario?.nombre || 'Desconocido' }}</td>
             <td>{{ reporte.fecha_creacion | date: 'dd/MM/yyyy' }}</td>
-            <td class="likes-cell">❤️ {{ reporte.total_likes || 0 }}</td>
+            <td class="likes-cell"><i class="fa-solid fa-heart" aria-hidden="true"></i> {{ reporte.total_likes || 0 }}</td>
             <td>
               <span class="badge" [ngClass]="getEstadoBadgeClass(reporte.estado)">
                 {{ getEstadoTexto(reporte.estado) }}
@@ -146,7 +146,7 @@
   </select>
 
   <button class="delete-btn" (click)="confirmarEliminacion(reporte)">
-    🗑️
+    <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
   </button>
 </td>
 
@@ -156,13 +156,13 @@
     </div>
 
     <div class="no-results" *ngIf="!loading && (!reportes || reportes.length === 0)">
-      <div class="empty-icon">🔭</div>
+      <div class="empty-icon"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></div>
       <h3>No hay reportes</h3>
       <p>No se encontraron reportes con los filtros seleccionados</p>
     </div>
 
     <div class="no-results" *ngIf="error && !loading">
-      <div class="empty-icon">⚠️</div>
+      <div class="empty-icon"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></div>
       <h3>Error al cargar</h3>
       <p>{{ error }}</p>
     </div>

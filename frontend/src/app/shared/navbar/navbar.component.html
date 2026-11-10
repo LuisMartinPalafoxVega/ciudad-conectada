@@ -1,106 +1,50 @@
-<nav class="navbar">
+<nav class="navbar" aria-label="Navegación principal">
   <div class="navbar-container">
+    <a class="navbar-brand" routerLink="/feed" aria-label="Ciudad Conectada, inicio">
+      <span class="brand-icon" aria-hidden="true">CC</span>
+      <span class="brand-name">Ciudad Conectada</span>
+    </a>
 
-    <!-- Marca -->
-    <div class="navbar-brand" routerLink="/feed">
-      <div class="brand-icon">🦪</div>
-      <span class="brand-name">Ciudad Almeja</span>
-    </div>
-
-    <!-- toggle movil -->
-    <button class="mobile-menu-toggle" (click)="toggleMenu()">
-      <span>☰</span>
+    <button
+      class="mobile-menu-toggle"
+      type="button"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="isMenuOpen"
+      aria-label="Abrir menú de navegación"
+    >
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+      </svg>
     </button>
 
     <div class="navbar-menu" [class.active]="isMenuOpen">
-
-      <!-- 🔹 LINKS VISIBLES SOLO SI ESTÁ LOGUEADO -->
       <div class="navbar-links" *ngIf="currentUser">
-
-        <a routerLink="/feed" routerLinkActive="active" (click)="closeMenu()">
-          🏛️ Inicio
-        </a>
-
-        <!-- ❌ OCULTO PARA ADMIN -->
-        <a 
-          routerLink="/mis-reportes" 
-          routerLinkActive="active" 
-          (click)="closeMenu()"
-          *ngIf="!isAdmin()"
-        >
-          📋 Mis Reportes
-        </a>
-
-        <!-- ❌ OCULTO PARA ADMIN -->
-        <a 
-          routerLink="/nuevo-reporte" 
-          routerLinkActive="active" 
-          (click)="closeMenu()"
-          *ngIf="!isAdmin()"
-        >
-          ➕ Nuevo Reporte
-        </a>
-
-        <a routerLink="/mapa-calor" routerLinkActive="active" (click)="closeMenu()">
-          🗺️ Mapa
-        </a>
-
-        <!-- ✔️ SOLO ADMIN -->
-        <a routerLink="/admin" routerLinkActive="active" *ngIf="isAdmin()" (click)="closeMenu()">
-          ⚙️ Panel Admin
-        </a>
-
+        <a routerLink="/feed" routerLinkActive="active" (click)="closeMenu()">Comunidad</a>
+        <a routerLink="/mis-reportes" routerLinkActive="active" (click)="closeMenu()" *ngIf="!isAdmin()">Mis reportes</a>
+        <a routerLink="/nuevo-reporte" routerLinkActive="active" (click)="closeMenu()" *ngIf="!isAdmin()">Crear reporte</a>
+        <a routerLink="/mapa-calor" routerLinkActive="active" (click)="closeMenu()">Mapa</a>
+        <a routerLink="/admin" routerLinkActive="active" (click)="closeMenu()" *ngIf="isAdmin()">Administración</a>
       </div>
 
-      <!-- 🔹 BOTONES CUANDO NO HAY SESIÓN -->
       <div class="navbar-actions" *ngIf="!currentUser">
-        <a routerLink="/login" class="btn-login" (click)="closeMenu()">
-          Iniciar Sesión
-        </a>
-        <a routerLink="/register" class="btn-register" (click)="closeMenu()">
-          Registrarse
-        </a>
+        <a routerLink="/login" class="btn-login" (click)="closeMenu()">Iniciar sesión</a>
+        <a routerLink="/register" class="btn-register" (click)="closeMenu()">Crear cuenta</a>
       </div>
 
-      <!-- 🔹 INFORMACIÓN DEL USUARIO LOGUEADO -->
       <div class="navbar-user" *ngIf="currentUser">
-
         <div class="user-info">
-
-          <!-- Avatar -->
-          <div class="user-avatar" *ngIf="!currentUser.foto_url">
-            {{ getInitials(currentUser.nombre) }}
-          </div>
-
-          <img 
-            *ngIf="currentUser.foto_url" 
-            [src]="currentUser.foto_url"
-            class="user-avatar user-avatar-image"
-            [alt]="currentUser.nombre"
-          />
-
+          <div class="user-avatar" *ngIf="!currentUser.foto_url">{{ getInitials(currentUser.nombre) }}</div>
+          <img *ngIf="currentUser.foto_url" [src]="currentUser.foto_url" class="user-avatar user-avatar-image" [alt]="currentUser.nombre" />
           <div class="user-details">
             <span class="user-name">{{ currentUser.nombre }}</span>
-            <span class="user-role">
-              {{ currentUser.rol === 'administrador' ? 'Administrador' : 'Usuario' }}
-            </span>
+            <span class="user-role">{{ currentUser.rol === 'administrador' ? 'Administrador' : 'Cuenta vecinal' }}</span>
           </div>
-
         </div>
-
-        <!-- Menú del usuario -->
         <div class="user-menu">
-          <a routerLink="/perfil" class="btn-perfil" (click)="closeMenu()">
-            👤 Mi Perfil
-          </a>
-
-          <button class="btn-logout" (click)="logout()">
-            🚪 Cerrar Sesión
-          </button>
+          <a routerLink="/perfil" class="btn-perfil" (click)="closeMenu()">Mi perfil</a>
+          <button class="btn-logout" type="button" (click)="logout()">Cerrar sesión</button>
         </div>
-
       </div>
-
     </div>
   </div>
 </nav>

@@ -32,7 +32,7 @@ export class NavbarComponent implements OnInit {
     if (userFromStorage) {
       const parsedUser = JSON.parse(userFromStorage);
 
-      // ⭐ FIX FOTO AQUÍ
+      //  FIX FOTO AQUÍ
       if (parsedUser.foto_url && !parsedUser.foto_url.startsWith('http')) {
         parsedUser.foto_url = environment.apiUrl + parsedUser.foto_url;
       }
@@ -46,7 +46,7 @@ export class NavbarComponent implements OnInit {
     // ===============================
     this.authService.currentUser$.subscribe(user => {
 
-      // ⭐ FIX FOTO AQUÍ TAMBIÉN
+      //  FIX FOTO AQUÍ TAMBIÉN
       if (user?.foto_url && !user.foto_url.startsWith('http')) {
         user.foto_url = environment.apiUrl + user.foto_url;
       }

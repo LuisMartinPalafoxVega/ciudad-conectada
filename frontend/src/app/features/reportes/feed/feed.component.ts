@@ -72,7 +72,7 @@ export class FeedComponent implements OnInit {
       next: (response) => {
        console.log("RESPUESTA BACK:", response);
       
-      // ✅ AGREGAR ESTE LOG PARA VER CADA REPORTE
+      //  AGREGAR ESTE LOG PARA VER CADA REPORTE
         response.items?.forEach((reporte: Reporte) => {
           console.log(`Reporte ${reporte.id}: usuario_dio_like =`, reporte.usuario_dio_like);
         });

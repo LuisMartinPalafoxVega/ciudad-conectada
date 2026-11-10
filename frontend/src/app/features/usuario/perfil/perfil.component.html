@@ -16,7 +16,7 @@
     </div>
 
     <div class="alert alert-error" *ngIf="errorMessage">
-      <span class="alert-icon">⚠</span>
+      <i class="fa-solid fa-triangle-exclamation alert-icon" aria-hidden="true"></i>
       <span>{{ errorMessage }}</span>
       <button class="alert-close" (click)="errorMessage = null">×</button>
     </div>
@@ -40,7 +40,7 @@
             <path d="M12 9a3 3 0 100 6 3 3 0 000-6z"/>
             <path fill-rule="evenodd" d="M9 2a2 2 0 00-2 2v.5a2 2 0 01-1 1.732l-.537.31a2 2 0 00-.732 2.732l.5.866a2 2 0 01-.732 2.732l-.5.866a2 2 0 00.732 2.732l.537.31A2 2 0 017 18.5v.5a2 2 0 002 2h6a2 2 0 002-2v-.5a2 2 0 011-1.732l.537-.31a2 2 0 00.732-2.732l-.5-.866a2 2 0 01.732-2.732l.5-.866a2 2 0 00-.732-2.732l-.537-.31A2 2 0 0117 4.5V4a2 2 0 00-2-2H9zM6.5 12a5.5 5.5 0 1111 0 5.5 5.5 0 01-11 0z" clip-rule="evenodd"/>
           </svg>
-          <span class="btn-text">✏️</span>
+          <span class="btn-text"><i class="fa-solid fa-pen" aria-hidden="true"></i></span>
           <input 
             type="file" 
             accept="image/*" 
@@ -60,7 +60,7 @@
         <h1>{{ usuario.nombre }}</h1>
         <p class="user-email">{{ usuario.email }}</p>
         <span class="user-badge" [class.admin]="usuario.rol === 'administrador'">
-          {{ usuario.rol === 'administrador' ? '👑 Administrador' : '👤 Usuario' }}
+          {{ usuario.rol === 'administrador' ? 'Administrador' : 'Usuario' }}
         </span>
       </div>
     </div>
@@ -72,7 +72,7 @@
         [class.active]="activeTab === 'info'"
         (click)="activeTab = 'info'"
       >
-        <span class="tab-icon">👤</span>
+        <i class="fa-solid fa-user tab-icon" aria-hidden="true"></i>
         <span>Información Personal</span>
       </button>
       <button 
@@ -80,7 +80,7 @@
         [class.active]="activeTab === 'password'"
         (click)="activeTab = 'password'"
       >
-        <span class="tab-icon">🔒</span>
+        <i class="fa-solid fa-lock tab-icon" aria-hidden="true"></i>
         <span>Cambiar Contraseña</span>
       </button>
     </div>

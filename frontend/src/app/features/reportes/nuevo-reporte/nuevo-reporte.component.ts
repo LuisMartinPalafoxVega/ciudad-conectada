@@ -48,7 +48,7 @@ export class NuevoReporteComponent implements OnInit, AfterViewInit {
     this.initMap();
   }
 
-  /** 🔹 Cargar categorías desde el servicio */
+  /**  Cargar categorías desde el servicio */
   loadCategorias(): void {
     this.reporteService.getCategorias().subscribe({
       next: (categorias) => {
@@ -60,12 +60,12 @@ export class NuevoReporteComponent implements OnInit, AfterViewInit {
     });
   }
 
-  /** 🔹 Inicializa el mapa Leaflet */
+  /**  Inicializa el mapa Leaflet */
   initMap(): void {
     this.map = L.map('map').setView([19.4326, -99.1332], 13);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
+      attribution: ' OpenStreetMap contributors'
     }).addTo(this.map);
 
     this.map.on('click', (e: L.LeafletMouseEvent) => {
@@ -73,7 +73,7 @@ export class NuevoReporteComponent implements OnInit, AfterViewInit {
     });
   }
 
-  /** 🔹 Usa la ubicación actual del usuario */
+  /**  Usa la ubicación actual del usuario */
   useMyLocation(): void {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -92,7 +92,7 @@ export class NuevoReporteComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /** 🔹 Establece marcador en el mapa y actualiza el formulario */
+  /**  Establece marcador en el mapa y actualiza el formulario */
   setLocation(lat: number, lng: number): void {
     if (this.marker && this.map) {
       this.map.removeLayer(this.marker);
@@ -108,7 +108,7 @@ export class NuevoReporteComponent implements OnInit, AfterViewInit {
     });
   }
 
-  /** 🔹 Procesa la imagen seleccionada */
+  /**  Procesa la imagen seleccionada */
   onImageSelected(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (!target.files || target.files.length === 0) return;
@@ -137,7 +137,7 @@ export class NuevoReporteComponent implements OnInit, AfterViewInit {
     reader.readAsDataURL(file);
   }
 
-  /** 🔹 Elimina imagen seleccionada */
+  /**  Elimina imagen seleccionada */
   removeImage(): void {
     this.imagenFile = null;
     this.imagenPreview = null;
@@ -160,7 +160,7 @@ export class NuevoReporteComponent implements OnInit, AfterViewInit {
             .join('\n\n');
           
           const confirmar = confirm(
-            `⚠️ POSIBLE DUPLICADO\n\n` +
+            `POSIBLE DUPLICADO\n\n` +
             `Similitud: ${resultado.similitud}%\n\n` +
             `Reportes similares:\n${reportes}\n\n` +
             `¿Deseas crear el reporte de todas formas?`
@@ -177,7 +177,7 @@ export class NuevoReporteComponent implements OnInit, AfterViewInit {
     });
   });
 }
-  /** 🔹 Envía el formulario */
+  /**  Envía el formulario */
  async onSubmit(): Promise<void> {
   if (this.reporteForm.invalid) {
     Object.keys(this.reporteForm.controls).forEach(key => {
@@ -186,7 +186,7 @@ export class NuevoReporteComponent implements OnInit, AfterViewInit {
     return;
   }
 
-  // ✅ VERIFICAR DUPLICADO CON IA
+  //  VERIFICAR DUPLICADO CON IA
   const cancelar = await this.verificarDuplicado();
   if (cancelar) {
     return; // Usuario canceló
@@ -202,7 +202,7 @@ export class NuevoReporteComponent implements OnInit, AfterViewInit {
 
   this.reporteService.createReporte(reporteData).subscribe({
     next: () => {
-      alert('✅ Reporte creado exitosamente');
+      alert('Reporte creado exitosamente');
       this.router.navigate(['/feed']);
     },
     error: (err) => {
@@ -212,7 +212,7 @@ export class NuevoReporteComponent implements OnInit, AfterViewInit {
   });
 }
 
-  // 🔹 Getters para validación
+  //  Getters para validación
   get titulo() { return this.reporteForm.get('titulo'); }
   get descripcion() { return this.reporteForm.get('descripcion'); }
   get categoria_id() { return this.reporteForm.get('categoria_id'); }

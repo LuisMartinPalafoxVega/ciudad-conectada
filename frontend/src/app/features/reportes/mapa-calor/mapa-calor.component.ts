@@ -54,7 +54,7 @@ export class MapaCalorComponent implements OnInit, OnDestroy {
     this.map = L.map('mapa-calor-container').setView([25.8, -109.08], 13);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
+      attribution: ' OpenStreetMap contributors'
     }).addTo(this.map);
 
     this.markersLayer = L.layerGroup().addTo(this.map);

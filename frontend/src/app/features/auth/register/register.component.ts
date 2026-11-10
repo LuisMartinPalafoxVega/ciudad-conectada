@@ -59,7 +59,7 @@ export class RegisterComponent {
       password
     }).subscribe({
       next: (res) => {
-        alert('✅ Usuario registrado correctamente');
+        alert('Usuario registrado correctamente');
         this.router.navigate(['/login']);
       },
       error: (err) => {

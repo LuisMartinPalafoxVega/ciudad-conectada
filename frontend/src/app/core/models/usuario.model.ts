@@ -5,7 +5,7 @@ export interface Usuario {
   rol: 'ciudadano' | 'administrador';
   activo: boolean;
   fecha_registro: string;
-  foto_url?: string; // ✅ Agregar este campo
+  foto_url?: string; //  Agregar este campo
 }
 
 export interface LoginRequest {
