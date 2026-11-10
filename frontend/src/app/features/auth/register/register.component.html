@@ -1,87 +1,119 @@
-<div class="auth-container">
-  <div class="auth-card">
-    <div class="logo">
-      <div class="logo-icon"><i class="fa-solid fa-city" aria-hidden="true"></i></div>
+<main class="register-page">
+  <section class="register-showcase" aria-labelledby="register-showcase-title">
+    <a class="register-showcase-brand" routerLink="/" aria-label="Ciudad Conectada, inicio">
+      <span class="register-showcase-logo" aria-hidden="true"><i class="fa-solid fa-city"></i></span>
+      <span>Ciudad <strong>Conectada</strong></span>
+    </a>
+
+    <div class="register-showcase-copy">
+      <span class="register-eyebrow"><span class="register-status-dot"></span> Construyamos comunidad</span>
+      <h1 id="register-showcase-title">Tu participación puede <span>transformar tu colonia.</span></h1>
+      <p>Forma parte de una comunidad que comparte necesidades, reconoce avances y trabaja por mejores espacios para todos.</p>
     </div>
-    
-    <h1>Ciudad Conectada</h1>
-    <p class="subtitle">Tu comunidad, en mejores manos</p>
-    
-    <div class="form-container">
-      <h2>Crear cuenta</h2>
-      <p class="form-subtitle">Únete y ayuda a mejorar tu comunidad</p>
-      
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+    <div class="register-city-visual" aria-hidden="true">
+      <div class="register-visual-glow"></div>
+      <svg class="register-city-map" viewBox="0 0 620 350" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="register-map-road register-road-main" d="M-30 291C84 236 145 266 240 205C341 141 420 182 650 64" />
+        <path class="register-map-road register-road-cross" d="M124 390C182 304 223 242 252 169C280 97 347 53 414-20" />
+        <path class="register-map-road register-road-secondary" d="M-12 139C77 169 116 187 191 162C264 138 320 85 365 3" />
+        <path class="register-map-route" d="M59 254C129 223 165 232 233 187C306 138 377 151 528 80" />
+        <g class="register-map-blocks">
+          <path d="M22 54L105 22L157 51L155 111L76 137L23 108V54Z" />
+          <path d="M181 26L236 7L274 28L270 82L216 101L181 82V26Z" />
+          <path d="M453 16L524 0L558 20V64L485 88L452 68L453 16Z" />
+          <path d="M390 235L464 209L517 235V291L438 320L390 291V235Z" />
+          <path d="M87 299L139 278L175 298V340L121 360L86 342L87 299Z" />
+          <path d="M294 278L350 258L381 275V321L325 342L294 324V278Z" />
+        </g>
+        <g class="register-map-parks">
+          <path d="M283 24L329 8L354 23V64L309 79L283 64V24Z" />
+          <path d="M511 141L564 121L595 140V183L541 202L511 184V141Z" />
+          <path d="M181 288L215 276L241 291V321L207 333L181 319V288Z" />
+        </g>
+        <circle class="register-route-node" cx="142" cy="226" r="5" />
+        <circle class="register-route-node" cx="311" cy="151" r="5" />
+        <circle class="register-route-node" cx="464" cy="109" r="5" />
+      </svg>
+      <span class="register-map-pin register-pin-one"><i class="fa-solid fa-location-dot"></i></span>
+      <span class="register-map-pin register-pin-two"><i class="fa-solid fa-location-dot"></i></span>
+      <span class="register-map-pin register-pin-three"><i class="fa-solid fa-location-dot"></i></span>
+      <div class="register-map-caption"><span class="register-caption-icon"><i class="fa-solid fa-people-group"></i></span><span><strong>Una comunidad más conectada</strong><small>Empieza con tu participación</small></span></div>
+    </div>
+
+    <div class="register-showcase-footer"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Cada reporte puede impulsar un cambio</div>
+  </section>
+
+  <section class="register-panel" aria-labelledby="register-title">
+    <div class="register-form-wrap">
+      <div class="register-mobile-brand" aria-hidden="true"><i class="fa-solid fa-city"></i></div>
+      <span class="register-kicker">Únete a tu comunidad</span>
+      <h2 id="register-title">Crea tu cuenta</h2>
+      <p class="register-intro">Regístrate para reportar, participar y dar seguimiento a los avances de tu colonia.</p>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
         <div class="form-group">
           <label for="nombre">Nombre completo</label>
-          <input
-            id="nombre"
-            type="text"
-            formControlName="nombre"
-            placeholder="Tu nombre"
-            [class.invalid]="nombre?.invalid && nombre?.touched"
-          />
+          <div class="register-input-wrap">
+            <i class="fa-regular fa-user" aria-hidden="true"></i>
+            <input id="nombre" type="text" formControlName="nombre" placeholder="Tu nombre" autocomplete="name" [class.invalid]="nombre?.invalid && nombre?.touched" />
+          </div>
           <div class="error-message" *ngIf="nombre?.invalid && nombre?.touched">
-            <span *ngIf="nombre?.errors?.['required']">El nombre es requerido</span>
-            <span *ngIf="nombre?.errors?.['minlength']">Mínimo 3 caracteres</span>
+            <span *ngIf="nombre?.errors?.['required']">El nombre es obligatorio.</span>
+            <span *ngIf="nombre?.errors?.['minlength']">Escribe al menos 3 caracteres.</span>
           </div>
         </div>
 
         <div class="form-group">
           <label for="email">Correo electrónico</label>
-          <input
-            id="email"
-            type="email"
-            formControlName="email"
-            placeholder="tu@email.com"
-            [class.invalid]="email?.invalid && email?.touched"
-          />
+          <div class="register-input-wrap">
+            <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+            <input id="email" type="email" formControlName="email" placeholder="nombre@correo.com" autocomplete="email" [class.invalid]="email?.invalid && email?.touched" />
+          </div>
           <div class="error-message" *ngIf="email?.invalid && email?.touched">
-            <span *ngIf="email?.errors?.['required']">El email es requerido</span>
-            <span *ngIf="email?.errors?.['email']">Email inválido</span>
+            <span *ngIf="email?.errors?.['required']">El correo electrónico es obligatorio.</span>
+            <span *ngIf="email?.errors?.['email']">Escribe un correo electrónico válido.</span>
           </div>
         </div>
-        
+
         <div class="form-group">
           <label for="password">Contraseña</label>
-          <input
-            id="password"
-            type="password"
-            formControlName="password"
-            placeholder="••••••••"
-            [class.invalid]="password?.invalid && password?.touched"
-          />
+          <div class="register-input-wrap">
+            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+            <input id="password" type="password" formControlName="password" placeholder="Al menos 6 caracteres" autocomplete="new-password" [class.invalid]="password?.invalid && password?.touched" />
+          </div>
           <div class="error-message" *ngIf="password?.invalid && password?.touched">
-            <span *ngIf="password?.errors?.['required']">La contraseña es requerida</span>
-            <span *ngIf="password?.errors?.['minlength']">Mínimo 6 caracteres</span>
+            <span *ngIf="password?.errors?.['required']">La contraseña es obligatoria.</span>
+            <span *ngIf="password?.errors?.['minlength']">Debe tener al menos 6 caracteres.</span>
           </div>
         </div>
 
         <div class="form-group">
           <label for="confirmPassword">Confirmar contraseña</label>
-          <input
-            id="confirmPassword"
-            type="password"
-            formControlName="confirmPassword"
-            placeholder="••••••••"
-            [class.invalid]="(confirmPassword?.invalid || registerForm.errors?.['mismatch']) && confirmPassword?.touched"
-          />
+          <div class="register-input-wrap">
+            <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+            <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="Escribe de nuevo tu contraseña" autocomplete="new-password" [class.invalid]="(confirmPassword?.invalid || registerForm.errors?.['mismatch']) && confirmPassword?.touched" />
+          </div>
           <div class="error-message" *ngIf="confirmPassword?.touched">
-            <span *ngIf="confirmPassword?.errors?.['required']">Confirma tu contraseña</span>
-            <span *ngIf="registerForm.errors?.['mismatch']">Las contraseñas no coinciden</span>
+            <span *ngIf="confirmPassword?.errors?.['required']">Confirma tu contraseña.</span>
+            <span *ngIf="registerForm.errors?.['mismatch']">Las contraseñas no coinciden.</span>
           </div>
         </div>
-        
-        <div class="error-message" *ngIf="error">{{ error }}</div>
-        
-        <button type="submit" class="btn-primary" [disabled]="loading || registerForm.invalid">
-          {{ loading ? 'Creando cuenta...' : 'Crear Cuenta' }}
+
+        <div class="register-error" *ngIf="error" role="alert">
+          <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+          <span>{{ error }}</span>
+        </div>
+
+        <button type="submit" class="register-submit" [disabled]="loading || registerForm.invalid">
+          <span>{{ loading ? 'Creando cuenta...' : 'Crear mi cuenta' }}</span>
+          <i class="fa-solid" [class.fa-arrow-right]="!loading" [class.fa-spinner]="loading" [class.fa-spin]="loading" aria-hidden="true"></i>
         </button>
-        
-        <p class="register-link">
-          ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
-        </p>
       </form>
+
+      <div class="register-divider"><span>¿Ya tienes cuenta?</span></div>
+      <a routerLink="/login" class="register-login-link">Iniciar sesión <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <p class="register-note"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Tus datos se mantienen protegidos.</p>
     </div>
-  </div>
-</div>
+  </section>
+</main>
