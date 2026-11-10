@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://ciudad-conectada-back-production.up.railway.app'
+  apiUrl: 'http://localhost:8000'
 };
