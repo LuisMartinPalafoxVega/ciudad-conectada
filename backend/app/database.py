@@ -9,7 +9,7 @@ load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
-    raise RuntimeError("DATABASE_URL no está configurada en backend/.env")
+    raise RuntimeError("DATABASE_URL no está configurada. Define la conexión en backend/.env.")
 
 engine = create_engine(
     DATABASE_URL,
