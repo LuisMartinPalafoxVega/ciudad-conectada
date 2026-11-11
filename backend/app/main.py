@@ -19,11 +19,12 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:4200",
-        "http://127.0.0.1:4200",
-        "http://localhost:8000",
-        "http://127.0.0.1:8000",
-        "https://ciudad-conectada-front-production.up.railway.app"
+        origin.strip()
+        for origin in os.getenv(
+            "ALLOWED_ORIGINS",
+            "http://localhost:4200,http://127.0.0.1:4200"
+        ).split(",")
+        if origin.strip()
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],

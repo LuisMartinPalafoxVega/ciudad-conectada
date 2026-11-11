@@ -1,3 +1,5 @@
+import os
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import jwt, JWTError
@@ -7,8 +9,10 @@ from models.usuarios import Usuario
 
 security = HTTPBearer()
 
-SECRET_KEY = "super_secret_key_123"
-ALGORITHM = "HS256"
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY no está configurada")
 
 
 def get_current_admin(

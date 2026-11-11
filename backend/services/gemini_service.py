@@ -6,8 +6,8 @@ from typing import List, Dict
 
 class GeminiService:
     def __init__(self):
-        # Usa GEMINI_API_KEY automáticamente
-        self.client = genai.Client()
+        api_key = os.getenv("GEMINI_API_KEY")
+        self.client = genai.Client(api_key=api_key) if api_key else None
 
     def verificar_duplicado(
         self,
@@ -24,6 +24,14 @@ class GeminiService:
                 "es_duplicado": False,
                 "similitud": 0,
                 "reportes_similares": []
+            }
+
+        if self.client is None:
+            return {
+                "es_duplicado": False,
+                "similitud": 0,
+                "reportes_similares": [],
+                "mensaje": "Verificación automática no configurada"
             }
 
         prompt = self._construir_prompt(

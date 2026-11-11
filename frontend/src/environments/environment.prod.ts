@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://ciudad-conectada-back-production.up.railway.app'
+  // Frontend and API share the CloudFront origin in AWS.
+  apiUrl: ''
 };
